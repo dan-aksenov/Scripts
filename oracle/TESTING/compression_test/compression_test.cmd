@@ -1,1 +1,1 @@
-sqlplus repadmin/rep095@IOTA1 @idx %1 %2 %3
+sqlplus dbax/dbax@IOTA1 @compression_test %1 %2 %3
