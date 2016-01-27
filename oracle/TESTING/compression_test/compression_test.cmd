@@ -1,0 +1,1 @@
+sqlplus repadmin/rep095@IOTA1 @idx %1 %2 %3
