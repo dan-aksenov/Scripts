@@ -1,48 +1,65 @@
+WHENEVER SQLERROR EXIT
+set serveroutput on
+set term off
+SET VER OFF
 set linesize 500
-spoo log\&1._&2..log
 
-PROMPT TEST SETUP
-create table &1..&2._DBAX as select * from &1..&2.;
+grant dba to COMP_TEST identified by test;
+alter session set current_schema=COMP_TEST;
+
+--TEST SETUP
+create table COMP_TEST.&2. as select * from &1..&2.;
 declare
 l_ddl varchar2(4000);
 begin
-l_ddl:= cast(replace(replace(dbms_metadata.get_ddl( 'INDEX', '&3.','&1.'),'&3.','&3._DBAX'),'&2.','&2._DBAX') as varchar2);
-execute immediate substr(l_ddl);
+l_ddl:= cast(replace(dbms_metadata.get_ddl( 'INDEX', '&3.','&1.'),'&1.','COMP_TEST') as varchar2);
+--dbms_output.put_line(l_ddl);
+execute immediate l_ddl;
 end;
 /
 
-PROMPT NOCOMPRESSION
-alter index &1..&3._DBAX rebuild nocompress online;
-select sum(bytes)/1024/1024 MB from dba_segments where owner = '&1.' and segment_type like 'INDEX%' and segment_name = '&3._DBAX';
-
+alter index COMP_TEST.&3. rebuild nocompress online;
+spoo log\&1._&2..log
+PROMPT Testing compression for User &1. Table &2. Index &3.
+select 'Not compressed index Size(MB):'||sum(bytes)/1024/1024 MB from dba_segments where owner = 'COMP_TEST' and segment_type like 'INDEX%' and segment_name = '&3.';
 set timi on
 --set autotrace on
-insert into &1..&2._DBAX as select * from &1..&2.;
+PROMPT Not compressed index Insert
+insert into COMP_TEST.&2. (select * from &1..&2.);
+PROMPT
+set timi off
 commit;
-exec dbms_stats.gather_table_stats(ownname=>'&1.', tabname=>'&3._DBAX');
-select /*+ INDEX(a &3._DBAX)*/ count(*) from &1..&2._DBAX a;
-delete from &1..&2._DBAX;
+exec dbms_stats.gather_table_stats(ownname=>'COMP_TEST', tabname=>'&2.');
+set timi on
+PROMPT Not compressed index Select
+select /*+ INDEX(a &3.)*/ count(*) from COMP_TEST.&2. a;
+PROMPT Not compressed index Delete
+delete from COMP_TEST.&2.;
+PROMPT TAG1
+set timi off
 commit;
 --set autotrace off
-set timi off
 
-PROMPT COMPRESSION
-alter index &1..&3._DBAX rebuild compress advanced low online;
-select sum(bytes)/1024/1024 MB from dba_segments where owner = '&1.' and segment_type like 'INDEX%' and segment_name = '&3._DBAX';
-
+alter index COMP_TEST.&3. rebuild compress advanced low online;
+select 'Compressed index Size(MB):'||sum(bytes)/1024/1024 MB from dba_segments where owner = 'COMP_TEST' and segment_type like 'INDEX%' and segment_name = '&3.';
 set timi on
 --set autotrace on
-insert into &1..&2._DBAX as select * from &1..&2.;
+PROMPT Compressed index Insert
+insert into COMP_TEST.&2. (select * from &1..&2.);
+set timi off
 commit;
-exec dbms_stats.gather_table_stats(ownname=>'&1.', tabname=>'&2._DBAX');
-select /*+ INDEX(a &3._DBAX)*/ count(*) from &1..&2._DBAX a;
-delete from &1..&2._DBAX;
+exec dbms_stats.gather_table_stats(ownname=>'COMP_TEST', tabname=>'&2.');
+set timi on
+PROMPT Compressed index Select
+select /*+ INDEX(a &3.)*/ count(*) from COMP_TEST.&2. a;
+PROMPT Compressed index Delete
+delete from COMP_TEST.&2.;
+set timi off
 commit;
 --set autotrace off
-set timi off
 
-drop index &3._DBAX;
-drop table &2._DBAX;
+
+drop user COMP_TEST cascade;
 
 spoo off
 exit
