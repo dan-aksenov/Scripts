@@ -8,7 +8,7 @@ grant dba to COMP_TEST identified by test;
 alter session set current_schema=COMP_TEST;
 
 --TEST SETUP
-create table COMP_TEST.&2. as select * from &1..&2.;
+create table COMP_TEST.&2. as select * from &1..&2. where 1=0;
 declare
 l_ddl varchar2(4000);
 begin
