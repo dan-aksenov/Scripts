@@ -1,0 +1,10 @@
+- name: Installing packages
+  yum: name={{ item }}
+  with_items:
+      - vim
+      - wget
+      - iftop
+      - atop
+
+- name: copy hosts file
+  copy: src="hosts" dest="/etc/hosts"
