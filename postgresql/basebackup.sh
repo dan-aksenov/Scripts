@@ -8,12 +8,12 @@
 # Vaildation disabled for now. Not shure if it'll work. //dbax
 
 PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/pgsql-9.4/bin"
+PGDATA=/var/lib/pgsql/9.4/data
 PG_BASEBACKUP=$(which pg_basebackup)
 PG_ARCHIVECLEANUP=$(which pg_archivecleanup)
-PGDATA=/var/lib/pgsql/9.4/data
 CURRENT="db-$(date +%m-%d-%Y_%H)"
-AGE="-atime +3"
-LOCK="/tmp/clonepg.lock"	
+AGE="-ctime +3"
+LOCK="/tmp/clonepg.lock"
 
 usage (){
 echo "clonepg.sh usage: "
