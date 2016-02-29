@@ -5,6 +5,8 @@
       - wget
       - iftop
       - atop
+      - hdparm
+      - lshw
 
 - name: copy hosts file
   copy: src="hosts" dest="/etc/hosts"

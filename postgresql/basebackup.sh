@@ -12,7 +12,7 @@ PGDATA=/var/lib/pgsql/9.4/data
 PG_BASEBACKUP=$(which pg_basebackup)
 PG_ARCHIVECLEANUP=$(which pg_archivecleanup)
 CURRENT="db-$(date +%m-%d-%Y_%H)"
-AGE="-mtime +3"
+	AGE="-mtime +3"
 LOCK="/tmp/clonepg.lock"
 
 usage (){
