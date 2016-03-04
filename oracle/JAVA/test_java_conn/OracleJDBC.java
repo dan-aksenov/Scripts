@@ -1,7 +1,7 @@
 import java.sql.*;
 import java.io.*;
  
-public class OracleJDBC2 {
+public class OracleJDBC {
  
 	public static void main(String[] argv) {
  
