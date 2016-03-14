@@ -10,6 +10,6 @@ for home in $(tail -n+2 adr_homes.lst); do
 	PURGE -AGE 000 -TYPE ALERT
 	PURGE -AGE 000 -TYPE INCIDENT
 	PURGE -AGE 000 -TYPE TRACE
-	EOF
+EOF
 done
 rm adr_homes.lst
