@@ -5,7 +5,7 @@ set src="h:\Users\Данила\Videos"
 
 IF NOT EXIST %log% MD %log%
 
-set dst="\\wdmycloud\danila\!BUPS\homevideos"
+set dst="\\wdmycloud\danila\!BUPS\Videos"
 
 robocopy %src% %dst% *.* /s /unilog:%log%\video_to_mycloud.log /z /purge
 
