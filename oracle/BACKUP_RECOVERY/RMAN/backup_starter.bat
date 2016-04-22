@@ -1,3 +1,4 @@
+rem starts rman backup choosing appropriate cmd file basing on tag parameter
 rem tags: 0,1,arch (for level 0,1 and archivelog backups)
 
 set tag=%1
@@ -8,7 +9,7 @@ zip -g old_logs.zip *%tag%.log
 del *%tag%.log -y
 
 rem actual rman backup
-rman target / @backup%tag%.cmd LOG=%log%
+rman target / @backup%tag%.cmd LOG='%log%'
 
 rem backup backups to remote server. (to do: add by parameters)
 net use \\fs1\d$ /user:localhost\dbax dbax
