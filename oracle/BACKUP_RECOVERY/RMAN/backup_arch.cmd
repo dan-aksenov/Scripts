@@ -1,0 +1,2 @@
+BACKUP ARCHIVELOG ALL;
+exit;
