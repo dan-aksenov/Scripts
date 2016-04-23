@@ -15,3 +15,4 @@ rem backup backups to remote server. (to do: add by parameters)
 net use \\fs1\d$ /user:localhost\dbax dbax
 robocopy c:\backup\rman \\fs1\d$\backup\THETA\ *.* /z /s /MIR /mt /log:.\backup_to_fs.log
 net use \\fs1\d$ /delete
+exit
