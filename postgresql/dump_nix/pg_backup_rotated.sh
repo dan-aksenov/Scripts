@@ -61,7 +61,7 @@ function perform_backups()
 {
 	SUFFIX=$1
 	FINAL_BACKUP_DIR=$BACKUP_DIR"`date +\%Y-\%m-\%d`$SUFFIX/"
- 
+     
 	echo "Making backup directory in $FINAL_BACKUP_DIR"
  
 	if ! mkdir -p $FINAL_BACKUP_DIR; then
@@ -152,7 +152,7 @@ then
 	# Delete all expired monthly directories
 	find $BACKUP_DIR -maxdepth 1 -name "*-monthly" -exec rm -rf '{}' ';'
  
-	perform_backups "-monthly"
+	perform_backups "-monthly" > $BACKUP_DIR/backup.log 2>&1
  
 	exit 0;
 fi
@@ -167,7 +167,7 @@ then
 	# Delete all expired weekly directories
 	find $BACKUP_DIR -maxdepth 1 -mtime +$EXPIRED_DAYS -name "*-weekly" -exec rm -rf '{}' ';'
  
-	perform_backups "-weekly"
+	perform_backups "-weekly" > $BACKUP_DIR/backup.log 2>&1
  
 	exit 0;
 fi
@@ -177,4 +177,4 @@ fi
 # Delete daily backups 7 days old or more
 find $BACKUP_DIR -maxdepth 1 -mtime +$DAYS_TO_KEEP -name "*-daily" -exec rm -rf '{}' ';'
  
-perform_backups "-daily"
+perform_backups "-daily" > $BACKUP_DIR/backup.log 2>&1
