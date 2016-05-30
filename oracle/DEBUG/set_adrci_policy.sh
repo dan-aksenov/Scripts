@@ -3,6 +3,7 @@ adrci << EOF
 spool adr_homes.lst
 show homes
 spool off
+exit
 EOF
 for home in $(tail -n+2 adr_homes.lst); do
 	adrci <<EOF
@@ -10,6 +11,7 @@ for home in $(tail -n+2 adr_homes.lst); do
 	SET CONTROL (shortp_policy =100)
 	SET CONTROL (LONGP_POLICY =168)
 	show control
+	exit
 EOF
 done
 rm adr_homes.lst
