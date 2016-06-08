@@ -25,13 +25,20 @@ select params->'PARAM3' from jsontable where params->'PARAM3' = '31' and type=1;
 --Поиск по неиндексируемому полю (в пределах одного значения TYPE)
 
 select * from coltable where type = 1 and param4='еМVрfLцXEOhSЫTxёQ50аоуQvщPХWmнSMuy7дХя6дOo1уТzЪнЕЫОoОиоИ3Дкql6ОлЁЦРPХЧюо90вЬАxК4NNsё0bj5кOwQW95ёЯЦ0qi0Zs16JВДЮЖЫцюВчaсэFAuggГmIY7JЩqKьнM31ЩЗаUZЦUёОЕЧМФв5я';
+--162.523 ms
+
 select * from coltable where param4='еМVрfLцXEOhSЫTxёQ50аоуQvщPХWmнSMuy7дХя6дOo1уТzЪнЕЫОoОиоИ3Дкql6ОлЁЦРPХЧюо90вЬАxК4NNsё0bj5кOwQW95ёЯЦ0qi0Zs16JВДЮЖЫцюВчaсэFAuggГmIY7JЩqKьнM31ЩЗаUZЦUёОЕЧМФв5я';
+--843.974 ms
 
 select * from coltable where type = 1 and param6 = 36;
 --228.222 ms
 select * from coltable where param6 = 36;
 --3579.060 ms
 
+select * from jsontable where params->>'PARAM4' = 'еМVрfLцXEOhSЫTxёQ50аоуQvщPХWmнSMuy7дХя6дOo1уТzЪнЕЫОoОиоИ3Дкql6ОлЁЦРPХЧюо90вЬАxК4NNsё0bj5кOwQW95ёЯЦ0qi0Zs16JВДЮЖЫцюВчaсэFAuggГmIY7JЩqKьнM31ЩЗаUZЦUёОЕЧМФв5я';
+--20733.535 ms
+select * from jsontable where type = 1 params->>'PARAM4' = 'еМVрfLцXEOhSЫTxёQ50аоуQvщPХWmнSMuy7дХя6дOo1уТzЪнЕЫОoОиоИ3Дкql6ОлЁЦРPХЧюо90вЬАxК4NNsё0bj5кOwQW95ёЯЦ0qi0Zs16JВДЮЖЫцюВчaсэFAuggГmIY7JЩqKьнM31ЩЗаUZЦUёОЕЧМФв5я';
+--3198.484 ms
 select * from jsontable where params->'PARAM6' = '36' and type =1;
 --4992.686 ms
 select params->'PARAM19' from jsontable where params->'PARAM6' = '36';
@@ -39,16 +46,16 @@ select params->'PARAM19' from jsontable where params->'PARAM6' = '36';
 
 --Поиск по нескольким полям (в ключая индексируемые и неиндексируемые)
 
---2 both indexed
-
-select * from coltable where type = 1 and param2='2013-03-20' and param3=6;
-select * from coltable where and param2='2013-03-20' and param3=6;
+--2 fld indexed
+select * from coltable where type = 1 and param3=6;
+--89.357 ms 
 
 select params->'PARAM19' from jsontable where params->'PARAM3' = '31' and params->'PARAM19' = '14';
---12.630 ms
+--9.592 ms
 
---2 both not indexed
---2 mixed
+--2 fld not indexed
+
+--2 fld mixed
 
  
 /* 
