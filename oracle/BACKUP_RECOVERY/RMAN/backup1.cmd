@@ -1,2 +1,4 @@
+crosscheck backup;
+crosscheck archivelog all;
 BACKUP INCREMENTAL LEVEL 1 AS COMPRESSED BACKUPSET DATABASE PLUS ARCHIVELOG;
 exit;
