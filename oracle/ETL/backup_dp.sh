@@ -11,7 +11,7 @@ CONTENTS_ALL=SCHEMA1,SCHEMA2
 #TABLE_ONLY=REPORT.WD_SQLSTORE
 DATE=$(date +\%Y-\%m-\%d)
 ORA_DIR=BACKUP
-DIRECTORY=DIRECTORY=$(sqlplus -S / as sysdba <<EOF
+DIRECTORY=$(sqlplus -S / as sysdba <<EOF
 set head off
 select directory_path from dba_directories where directory_name='$ORA_DIR';
 exit
