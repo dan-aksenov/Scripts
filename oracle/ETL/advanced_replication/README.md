@@ -1,2 +1,3 @@
-Multimaster setup
-**revision needed**
+Multimaster setup.
+
+**Revision needed!**
