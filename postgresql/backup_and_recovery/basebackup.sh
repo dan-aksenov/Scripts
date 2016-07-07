@@ -55,9 +55,9 @@ fi
 touch $LOCK
 mkdir $BACKUPDIR/$CURRENT
 
-# -h added because "no pg_hba.conf entry for replication connection from host "[local]"" //dbax
-# -F added because "directory "/var/lib/pgsql/9.4/data" exists but is not empty" for custom tablespaces. //dbax
-$PG_BASEBACKUP -l "basebackup $(date +%m-%d-%Y_%H)" -U postgres -D $BACKUPDIR/$CURRENT -h $HOSTNAME -F t -P -v
+# -F t and -z added to compress results. //dbax
+# -x added for backup xlog also. //dbax
+$PG_BASEBACKUP -l "basebackup $(date +%m-%d-%Y_%H)" -U postgres -D $BACKUPDIR/$CURRENT -h $HOSTNAME -F t -P -v -x -z
 chmod 700 $BACKUPDIR/$CURRENT
 
 # remove old backups
