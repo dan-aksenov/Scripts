@@ -1,21 +1,24 @@
 # postgresql installation on Centos7
 # user variables section
-PGVER=9.4
+PGVER=9.5
 # end of user variables section
 
 # postgres verstion without dots
 PGVER2=$(echo $PGVER | sed -e "s/\.//g")
 
-# Add Posgresql repo (need to check for latest verstion!)
-yum localinstall http://yum.postgresql.org/$PGVER/redhat/rhel-7-x86_64/pgdg-centos$PGVER2-$PGVER-1.noarch.rpm
+# Add Posgresql repo
+yum -y localinstall http://yum.postgresql.org/$PGVER/redhat/rhel-7-x86_64/pgdg-centos$PGVER2-$PGVER-1.noarch.rpm
 
-# Install postgres and stuff
+# Check for latest repo verstion
+yum update pgdg-centos$PGVER2
+
+# Install postgres main stuff
 yum -y install postgresql$PGVER2 postgresql$PGVER2-server postgresql$PGVER2-contrib postgresql$PGVER2-libs 
 
-# Install languages
+# Install languages if needed
 yum -y install  postgresql$PGVER2-plpython postgresql$PGVER2-pltcl postgresql$PGVER2-python
 
-# Install devel if needed postgresql$PGVER-devel
+# Install devel if needed
 yum -y install postgresql$PGVER2-devel 
 
 # Initialize DB (defauld directory)
