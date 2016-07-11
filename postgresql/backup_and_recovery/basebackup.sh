@@ -7,9 +7,9 @@
 # Added few minor tweeks for my setup. Vaildation from original script removed. //dbax
 
 PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/pgsql-9.4/bin"
-PGHOME==/var/lib/pgsql/9.4
+PGHOME=/var/lib/pgsql/9.4
 #PGDATA=$HOME/data # Not used for now //dbax
-PGARCH=$HOME/backup/arch
+PGARCH=$PGHOME/backup/arch
 PG_BASEBACKUP=$(which pg_basebackup)
 PG_ARCHIVECLEANUP=$(which pg_archivecleanup)
 CURRENT="db-$(date +%m-%d-%Y_%H)"
