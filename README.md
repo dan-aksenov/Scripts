@@ -4,8 +4,8 @@ various scripts
 
 Some markdown exercises
 
-[] checkbox 1
-[] checkbox 2
+-[] checkbox 1
+-[] checkbox 2
 
 * star 1
 * star 2
