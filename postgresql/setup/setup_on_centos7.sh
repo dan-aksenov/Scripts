@@ -41,12 +41,6 @@ sudo -u postgres psql << EOF
 alter user postgres password 'postgres';
 EOF
 
-# Change listen address
-sed -i -e "s/#listen_addresses = 'localhost'/listen_addresses = '*'/g" /var/lib/pgsql/$PGVER/data/postgresql.conf
-# Add entry to pg_hba.conf
-echo 'host all all 127.0.0.1/32 md5' | sudo tee --append /var/lib/pgsql/$PGVER/data/pg_hba.conf
-echo 'host all all 192.168.0.1/16 md5' | sudo tee --append /var/lib/pgsql/$PGVER/data/pg_hba.conf
-
 # Stop & disable firewall. Need to find way to edit it inplace.
 systemctl stop firewalld
 systemctl disable firewalld
