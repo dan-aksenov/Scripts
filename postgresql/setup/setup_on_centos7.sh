@@ -1,6 +1,7 @@
 # postgresql installation on Centos7
 # user variables section
 PGVER=9.5
+if [ -z "$1" ]; then echo "Target database version is not set. Setup aborted." && exit 1; fi
 # end of user variables section
 
 # postgres verstion without dots
