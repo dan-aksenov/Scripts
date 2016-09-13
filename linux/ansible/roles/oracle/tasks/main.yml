@@ -7,8 +7,12 @@
       - xorg-x11-xinit 
       - xorg-x11-deprecated-libs 
       - libXtst
+
 - name: copy hosts file
   copy: src="/etc/hosts" dest="/etc/hosts"
 
 - name: oracle-recommended selinux
   selinux: policy=targeted state=disabled
+  
+- name: ensure firewalld is disabled and stopped
+  service: name=firewalld enabled=no state=stopped
