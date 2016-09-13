@@ -4,9 +4,11 @@
       - vim
       - wget
       - iftop
+      - iotop
       - atop
       - hdparm
       - lshw
+      - tmux
 
 - name: copy hosts file
-  copy: src="hosts" dest="/etc/hosts"
+  copy: src="/etc/hosts" dest="/etc/hosts"
