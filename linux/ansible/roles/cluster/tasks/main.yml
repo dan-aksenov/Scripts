@@ -14,8 +14,15 @@
 - name: ensure firewalld is disabled and stopped
   service: name=firewalld enabled=no state=stopped
 
-- name: ensure corosync is disabled and stopped
+- name: ensure corosync and pacemaker is disabled and stopped
   service: name=corosync enabled=no state=stopped
-
+  
 - name: ensure pacemaker is disabled and stopped
   service: name=pacemaker enabled=no state=stopped
+
+#need to fix password
+- name: add clusterware user
+  user: name=hacluster password=hacluster
+
+- name: ensure pcsd enabled and started
+  service: name=pcsd enabled=yes state=started
