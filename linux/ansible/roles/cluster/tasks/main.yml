@@ -8,7 +8,7 @@
       #- fence-agents-virsh 
 
 #todo keep selinux(?) and firewall online
-- name: oracle-recommended selinux
+- name: disable selinux
   selinux: policy=targeted state=disabled
 
 - name: ensure firewalld is disabled and stopped
