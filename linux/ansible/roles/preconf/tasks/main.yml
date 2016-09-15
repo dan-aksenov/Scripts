@@ -5,6 +5,7 @@
       - wget
       - iftop
       - iotop
+      - sysstat
       - atop
       - hdparm
       - lshw
