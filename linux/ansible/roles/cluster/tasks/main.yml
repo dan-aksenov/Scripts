@@ -6,3 +6,16 @@
       - pcs
       #- fence-agents-all
       #- fence-agents-virsh 
+
+#todo keep selinux(?) and firewall online
+- name: oracle-recommended selinux
+  selinux: policy=targeted state=disabled
+
+- name: ensure firewalld is disabled and stopped
+  service: name=firewalld enabled=no state=stopped
+
+- name: ensure corosync is disabled and stopped
+  service: name=corosync enabled=no state=stopped
+
+- name: ensure pacemaker is disabled and stopped
+  service: name=pacemaker enabled=no state=stopped

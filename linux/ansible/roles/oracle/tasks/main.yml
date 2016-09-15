@@ -8,9 +8,6 @@
       - xorg-x11-deprecated-libs 
       - libXtst
 
-- name: copy hosts file
-  copy: src="/etc/hosts" dest="/etc/hosts"
-
 - name: oracle-recommended selinux
   selinux: policy=targeted state=disabled
   
