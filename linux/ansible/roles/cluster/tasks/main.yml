@@ -22,7 +22,7 @@
 
 #need to fix password
 - name: add clusterware user
-  user: name=hacluster password=hacluster
+  user: name=hacluster password=$6$r2IvlBZP$.CjWNPmJpAAs1fThIlZ999o6jxaz1HBkxuQLiT27qD4p8BasLa.UIQlaH5YzssTRhNT4GnKIfu9OBbjgEJ5gR/
 
 - name: ensure pcsd enabled and started
   service: name=pcsd enabled=yes state=started
