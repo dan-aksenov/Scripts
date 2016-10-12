@@ -6,8 +6,8 @@
       - iftop
       - iotop
       - sysstat
-      - atop
       - hdparm
+      - atop
       - lshw
       - tmux
       - python-pip
