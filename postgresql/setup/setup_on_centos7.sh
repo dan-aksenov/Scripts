@@ -2,7 +2,7 @@
 # User variables section
 PGVER=$1
 if [ -z "$PGVER" ]; then echo "Database version is not set. Setup aborted." && exit 1; fi
-# Postgres verstion without dots.
+# Postgres version without dots.
 PGVER2=$(echo $PGVER | sed -e "s/\.//g")
 # End of user variables section.
 
@@ -16,10 +16,10 @@ yum -y update pgdg-centos$PGVER2
 # Install postgres main stuff
 yum -y install postgresql$PGVER2 postgresql$PGVER2-server postgresql$PGVER2-contrib postgresql$PGVER2-libs 
 
-# Install languages if needed
+# Install some languages if needed (I need:))
 yum -y install  postgresql$PGVER2-plpython postgresql$PGVER2-pltcl postgresql$PGVER2-python
 
-# Install devel if needed
+# Install devel if needed (might be usefull sometimes)
 yum -y install postgresql$PGVER2-devel 
 
 #todo update-alternatives. do we need this?
