@@ -1,13 +1,16 @@
 #!/bin/bash
 # Some basic and best practice configs for newly created db's postgresql.conf file
-PGCONF=/var/lib/pgsql/$PGVER/data/postgresql.conf
+
+PGCONF=/var/lib/pgsql/$PGVER/data/postgresql.conf # get it dynamical somehow
+
+yum install epel-release
+yum install pgtune
+
+pgtune -i $PGCONF -o $PGCONF.tuned -T Mixed -c 100
+mv $PGCONF $PGCONF.orig
+mv $PGCONF.tuned $PGCONF
+
 cat >> $PGCONF << EOF
-
-#some minimal memory configs(subject to tune)
-shared_buffers = 1024MB                
-temp_buffers = 50MB                     
-work_mem = 512MB  
-
 #add stat_statements to libs
 shared_preload_libraries = 'pg_stat_statements'
 
