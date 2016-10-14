@@ -29,7 +29,7 @@ firewall-cmd --permanent --zone=public --add-service=postgresql
 firewall-cmd --reload
 
 read -p "Initialize new database cluster (y/n):" INIT_FLAG
-if $INIT_FLAG = "y";
+if [ {$INIT_FLAG="y"} ];
 	then
 	# Initialize DB (defauld directory)
 	/usr/pgsql-$PGVER/bin/postgresql$PGVER2-setup initdb
