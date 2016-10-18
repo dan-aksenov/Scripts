@@ -2,7 +2,7 @@
 # Variables section
 PGVER=$1
 # User default postgres version if not set
-if [ -z "$PGVER" ]; PGVER=9.5; fi
+if [ -z "$PGVER" ]; then PGVER=9.5; fi
 # Postgres version without dots.
 PGVER2=$(echo $PGVER | sed -e "s/\.//g")
 # Determine Distribution name
