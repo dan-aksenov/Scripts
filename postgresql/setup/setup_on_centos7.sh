@@ -1,13 +1,26 @@
 # Postgresql installation on Centos7
-# User variables section
+# Variables section
 PGVER=$1
-if [ -z "$PGVER" ]; then echo "Database version is not set. Setup aborted." && exit 1; fi
+# User default postgres version if not set
+if [ -z "$PGVER" ]; PGVER=9.5; fi
 # Postgres version without dots.
 PGVER2=$(echo $PGVER | sed -e "s/\.//g")
-# End of user variables section.
+# Determine Distribution name
+DIST=$(cat /etc/*-release | grep ^NAME)
+if [[ $DIST == *"CentOS"* ]]; then DIST=centos;
+	elif [[ $DIST == *"Oracle"* ]]; then DIST=oraclelinux;
+	else echo echo "Could not determine distribution name. Setup aborted." && exit 1;
+fi
+# End of variables section.
+
+# Check connection
+wget --spider http://yum.postgresql.org
+if [ "$?" != 0 ]; then
+  echo "Unable to connect to yum.postgresql.org. Check network of proxy settints."
+fi
 
 # Add Posgresql repo
-yum -y localinstall http://yum.postgresql.org/$PGVER/redhat/rhel-7-x86_64/pgdg-centos$PGVER2-$PGVER-1.noarch.rpm
+yum -y localinstall http://yum.postgresql.org/$PGVER/redhat/rhel-7-x86_64/pgdg-$DIST$PGVER2-$PGVER-1.noarch.rpm
 # Check for latest repo verstion. And update if found one.
 yum -y update pgdg-centos$PGVER2
 
