@@ -22,8 +22,9 @@
     chdir: /tmp/mamonsu
 
 - name: add zabbix server name to mamonsu config
-  lineinfile: dest=/etc/mamonsu/agent.conf regexp='address = zabbix.server.ip' line='address = 192.168.154.145'
+  lineinfile: dest=/etc/mamonsu/agent.conf regexp='address' line='address = 192.168.154.145'
 
+- lineinfile: dest=/etc/mamonsu/agent.conf regexp='client' line='client = {{ ansible_hostname }}'
 #- name: start monitoring service. systemd module will be supported in 2.5
 
 - shell: systemctl enable mamonsu
