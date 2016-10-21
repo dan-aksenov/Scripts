@@ -20,3 +20,16 @@
   shell: yum localinstall -y mamonsu*.rpm
   args:
     chdir: /tmp/mamonsu
+
+- name: add zabbix server name to mamonsu config
+  lineinfile: dest=/etc/mamonsu/agent.conf regexp='address = zabbix.server.ip' line='address = 192.168.154.145'
+
+#- name: start monitoring service. systemd module will be supported in 2.5
+
+- shell: systemctl enable mamonsu
+- shell: systemctl start mamonsu
+
+#  systemd: 
+#    name: mamonsu 
+#    enabled: yes 
+#    state: started
