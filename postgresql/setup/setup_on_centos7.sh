@@ -59,8 +59,8 @@ if [ $INIT_FLAG = "y" ];
 	
 	# Install and run pgtune on database cluster
 	PGCONF=/var/lib/pgsql/$PGVER/data/postgresql.conf # get it dynamical somehow
-	yum install epel-release
-	yum install pgtune
+	yum install epel-release -y
+	yum install pgtune -y
 	pgtune -i $PGCONF -o $PGCONF.tuned -T Mixed -c 100
 	mv $PGCONF $PGCONF.orig
 	mv $PGCONF.tuned $PGCONF
