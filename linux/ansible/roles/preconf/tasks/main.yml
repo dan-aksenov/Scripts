@@ -11,4 +11,5 @@
       - lshw
       - tmux
       - python-pip
+      - git
 

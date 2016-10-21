@@ -1,5 +1,2 @@
-- name: Download mamonsu
-      shell: creates=/tmp/mamonsu wget -O - https://github.com/postgrespro/mamonsu/archive/master.zip | unzip /tmp
-
-- name: Install Redis
-      command: chdir=/tmp/redis-$redis_version make rpm && yum localinstall mamonsu*.rpm
+- git: repo=https://github.com/postgrespro/mamonsu
+       dest=/tmp/mamonsu
