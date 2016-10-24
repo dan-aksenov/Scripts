@@ -6,7 +6,5 @@
   
   roles:
       - postgres 
-  #vars_files:
-  #  - 'defaults/main.yml'
-  #tasks:
-  #  - include: 'tasks/main.yml'
+  vars_files:
+    - 'defaults/main.yml'
