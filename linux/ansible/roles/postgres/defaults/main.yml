@@ -6,13 +6,13 @@ postgresql_version: 9.5
 postgresql_contrib: yes
 
 # Specify database cluster location in case when /var/lib/pgsq/x.y/data directory should be replaced with symlink.
-postgresql_cluster_symlink_src: ""
+#postgresql_cluster_symlink_src: ""
 
 # Stop postgresql service if started and drop cluster if existing.
-postgresql_drop_old_cluster: no
+#postgresql_drop_old_cluster: no
 
 # Enable some options for streaming replication purposes
-postgresql_streaming_replication: no
+#postgresql_streaming_replication: no
 
 # Specify a directory for the logs if the default directory does not plan to use
 # postgresql_log_directory: /var/log/postgresql
