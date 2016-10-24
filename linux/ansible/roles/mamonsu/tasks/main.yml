@@ -21,12 +21,18 @@
   args:
     chdir: /tmp/mamonsu
 
-- name: add zabbix server name to mamonsu config
-  lineinfile: dest=/etc/mamonsu/agent.conf regexp='address' line='address = 192.168.154.145'
-
+# Edit config file
+- lineinfile: dest=/etc/mamonsu/agent.conf regexp='address' line='address = 192.168.154.145'
 - lineinfile: dest=/etc/mamonsu/agent.conf regexp='client' line='client = {{ ansible_hostname }}'
-#- name: start monitoring service. systemd module will be supported in 2.5
+- lineinfile: dest=/etc/mamonsu/agent.conf regexp='user' line='user = mamonsu'
+- lineinfile: dest=/etc/mamonsu/agent.conf regexp='database' line='database = mamonsu'
 
+# Bootstrap DDL for monitoring (if you want to monitoring without superuser rights)
+- shell: createdb mamonsu 
+- shell: createuser mamonsu
+- shell: mamonsu bootstrap -U postgres -d mamonsu
+
+#- name: start monitoring service. systemd module will be supported in 2.5
 - shell: systemctl enable mamonsu
 - shell: systemctl start mamonsu
 
