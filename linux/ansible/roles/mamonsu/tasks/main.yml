@@ -28,9 +28,10 @@
 - lineinfile: dest=/etc/mamonsu/agent.conf regexp='database' line='database = mamonsu'
 
 # Bootstrap DDL for monitoring (if you want to monitoring without superuser rights)
-- shell: createdb mamonsu 
-- shell: createuser mamonsu
-- shell: mamonsu bootstrap -U postgres -d mamonsu
+- name: Bootstrap DDL for monitoring
+  shell: createdb mamonsu && createuser mamonsu && mamonsu bootstrap -U postgres -d mamonsu
+  become: true
+  become_user: postgres
 
 #- name: start monitoring service. systemd module will be supported in 2.5
 - shell: systemctl enable mamonsu
