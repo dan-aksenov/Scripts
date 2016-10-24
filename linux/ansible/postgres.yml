@@ -1,0 +1,12 @@
+# Install PostgreSQL on Enterprise Linux 7 (RHEL/CentOS/Scientific/OEL)
+# Original playbook by https://github.com/lesovsky/ansible-postgresql-sr-on-el6 with RH7 adaptations and own modifications
+- hosts: postgres
+  user: dbax 
+  become: yes 
+  
+  roles:
+      - postgres 
+  #vars_files:
+  #  - 'defaults/main.yml'
+  #tasks:
+  #  - include: 'tasks/main.yml'
