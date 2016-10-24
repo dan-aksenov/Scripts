@@ -13,7 +13,7 @@
     pkg: "{{ item }}"
   with_items:
     - postgresql{{ postgresql_version |replace('.', '') }}-server
-    - python-psycopg2
+#    - python-psycopg2
 
 - name: "Stage 1: install postgresql contrib package"
   yum: 
