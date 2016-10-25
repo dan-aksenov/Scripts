@@ -34,8 +34,9 @@
   become_user: postgres
 
 #- name: start monitoring service. systemd module will be supported in 2.5
-- shell: systemctl enable mamonsu
-- shell: systemctl start mamonsu
+- service: name=mamonsu state=started enabled=yes
+#- shell: systemctl enable mamonsu
+#- shell: systemctl start mamonsu
 
 #  systemd: 
 #    name: mamonsu 
