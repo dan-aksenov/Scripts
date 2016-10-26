@@ -12,6 +12,6 @@
   when: not ansible_pkg_mgr == "yum"
 
 - include: install.yml
-- include: configure.yml
-- include: users.yml
-- include: databases.yml
+#- include: configure.yml
+#- include: users.yml
+#- include: databases.yml
