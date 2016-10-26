@@ -1,13 +1,5 @@
 # file: roles/install-postgresql-on-el6/tasks/configure.yml -- postgresql pre-start configuration and startup
 
-#- name: "Stage 2: stop old postgresql service"
-#  service: name="postgresql-{{ postgresql_version }}" state=stopped
-#  when: postgresql_drop_old_cluster
-
-#- name: "Stage 2: remove old postgresql cluster"
-#  command: "rm -rf /var/lib/pgsql/{{ postgresql_version }}/data {{ postgresql_cluster_symlink_src }}"
-#  when: postgresql_drop_old_cluster
-
 #- name: "Stage 2: cluster directory replacement with symlink, check destination directory"
 #  file:
 #    path: "{{ postgresql_cluster_symlink_src }}"
@@ -27,8 +19,8 @@
 #  when: postgresql_cluster_symlink_src|length > 0
 
 - name: "Stage 2: initialize new postgresql cluster"
-  sudo: yes
-  sudo_user: "{{ postgresql_admin_user }}"
+  become: yes
+  become_user: "{{ postgresql_admin_user }}"
   command: "/usr/pgsql-{{ postgresql_version }}/bin/initdb -D /var/lib/pgsql/{{ postgresql_version }}/data"
 
 - name: "Stage 2: configure pg_hba.conf"
