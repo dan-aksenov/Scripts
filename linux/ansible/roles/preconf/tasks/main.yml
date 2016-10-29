@@ -4,9 +4,12 @@
       - vim
       - wget
       - iftop
-      - atop
+      - iotop
+      - sysstat
       - hdparm
+      - atop
       - lshw
+      - tmux
+      - python-pip
+      - git
 
-- name: copy hosts file
-  copy: src="hosts" dest="/etc/hosts"

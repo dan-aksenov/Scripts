@@ -1,0 +1,44 @@
+- name: Installing prereqs
+  yum: name={{ item }}
+  with_items:
+      - git
+      - make 
+      - rpm-build 
+      - python2-devel 
+      - python-setuptools
+
+- name: git clone mamonsu 
+  git: repo=https://github.com/postgrespro/mamonsu
+       dest=/tmp/mamonsu
+
+- name: make rpm from source
+  shell: make rpm 
+  args:
+    chdir: /tmp/mamonsu
+
+- name: install mamonsu from local file
+  shell: yum localinstall -y mamonsu*.rpm
+  args:
+    chdir: /tmp/mamonsu
+
+# Edit config file
+- lineinfile: dest=/etc/mamonsu/agent.conf regexp='address' line='address = 192.168.154.145'
+- lineinfile: dest=/etc/mamonsu/agent.conf regexp='client' line='client = {{ ansible_hostname }}
+- lineinfile: dest=/etc/mamonsu/agent.conf regexp='user' line='user = mamonsu'
+- lineinfile: dest=/etc/mamonsu/agent.conf regexp='database' line='database = mamonsu'
+
+# Bootstrap DDL for monitoring (if you want to monitoring without superuser rights)
+- name: Bootstrap DDL for monitoring
+  shell: createdb mamonsu && createuser mamonsu && mamonsu bootstrap -U postgres -d mamonsu
+  become: true
+  become_user: postgres
+
+#- name: start monitoring service. systemd module will be supported in 2.5
+- service: name=mamonsu state=started enabled=yes
+#- shell: systemctl enable mamonsu
+#- shell: systemctl start mamonsu
+
+#  systemd: 
+#    name: mamonsu 
+#    enabled: yes 
+#    state: started

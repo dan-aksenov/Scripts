@@ -1,0 +1,5 @@
+---
+pacemaker_package: pcs
+pacemaker_user: hacluster
+pacemaker_ansible_group: pcs_cluster
+pacemaker_cluster_name: cluster_pgsql 

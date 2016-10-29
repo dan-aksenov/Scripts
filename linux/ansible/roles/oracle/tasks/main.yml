@@ -1,0 +1,15 @@
+- name: Installing packages
+  yum: name={{ item }}
+  with_items:
+      - oracle-rdbms-server-12cR1-preinstall
+      # minimal X for graphical install
+      - xorg-x11-xauth
+      - xorg-x11-xinit 
+      - xorg-x11-deprecated-libs 
+      - libXtst
+
+- name: oracle-recommended selinux
+  selinux: policy=targeted state=disabled
+  
+- name: ensure firewalld is disabled and stopped
+  service: name=firewalld enabled=no state=stopped
