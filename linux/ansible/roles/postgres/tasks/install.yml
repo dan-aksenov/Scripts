@@ -5,6 +5,11 @@
     state: present
     name: https://yum.postgresql.org/{{ postgresql_version }}/redhat/rhel-7-x86_64/pgdg-{{ ansible_distribution | lower }}{{ postgresql_version | replace('.','') }}-{{ postgresql_version }}-1.noarch.rpm
 
+#- name: "Stage 1: install rpm key"
+#  rpm_key:
+#    state: present
+#    key: http://apt.sw.be/RPM-GPG-KEY.dag.txt
+
 - name: "Stage 1: install postgresql packages"
   yum: 
     state: latest
