@@ -10,7 +10,11 @@
 #  rpm_key:
 #    state: present
 #    key: http://apt.sw.be/RPM-GPG-KEY.dag.txt
+<<<<<<< HEAD
 
+=======
+	
+>>>>>>> 56a647df59cc360f070407b1ca757beeca662dff
 - name: "Stage 1: install postgresql packages"
   yum: 
     state: latest
