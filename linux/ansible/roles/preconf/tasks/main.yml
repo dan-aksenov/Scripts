@@ -12,4 +12,7 @@
       - tmux
       - python-pip
       - git
+      - ntp
 
+- name: Sync time
+  shell: ntpdate dc3
