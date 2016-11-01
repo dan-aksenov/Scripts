@@ -23,7 +23,7 @@
 
 # Edit config file
 - lineinfile: dest=/etc/mamonsu/agent.conf regexp='address' line='address = 192.168.154.145'
-- lineinfile: dest=/etc/mamonsu/agent.conf regexp='client' line='client = {{ ansible_hostname }}
+- lineinfile: dest=/etc/mamonsu/agent.conf regexp='client' line='client = {{ ansible_hostname }}'
 - lineinfile: dest=/etc/mamonsu/agent.conf regexp='user' line='user = mamonsu'
 - lineinfile: dest=/etc/mamonsu/agent.conf regexp='database' line='database = mamonsu'
 
@@ -32,6 +32,7 @@
   shell: createdb mamonsu && createuser mamonsu && mamonsu bootstrap -U postgres -d mamonsu
   become: true
   become_user: postgres
+  ignore_errors: yes
 
 #- name: start monitoring service. systemd module will be supported in 2.5
 - service: name=mamonsu state=started enabled=yes
