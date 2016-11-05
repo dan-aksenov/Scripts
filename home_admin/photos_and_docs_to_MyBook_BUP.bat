@@ -6,14 +6,12 @@ set log=d:\tmp
 
 IF NOT EXIST %log% MD %log%
 
-robocopy K:\HOME_BUP K:\HOME_BUP_OLD *.* /e /unilog:"%log%\home_to_old.log" /xd YandexDisk /TEE /z /purge
+set src=K:\HOME_BUP
+set dst=K:\HOME_BUP_OLD
+robocopy %src% %dst% *.* /e /unilog:"%log%\home_to_old.log" /xd YandexDisk /TEE /z /purge
 
 set src="d:\Users\Данила"
-
-robocopy %src% K:\HOME_BUP *.* /e /unilog:"%log%\home_to_mybook.log" /xd YandexDisk /TEE /z /purge
-
-rem since full home is backed'up document section excluded.
-rem set src="d:\Users\Данила\Documents"
-rem robocopy %src% "K:\Мои документы" *.* /s /unilog:"%log%\docs_to_mybook.log" /xf Thumbs.db /TEE /z /purge
+set dsc=K:\HOME_BUP
+robocopy %src% %dst% *.* /e /unilog:"%log%\home_to_mybook.log" /xd YandexDisk /TEE /z /purge
 
 pause
