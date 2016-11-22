@@ -35,7 +35,9 @@ yum -y install  postgresql$PGVER2-plpython postgresql$PGVER2-pltcl postgresql$PG
 # Install devel if needed (might be usefull sometimes)
 yum -y install postgresql$PGVER2-devel 
 
-#todo update-alternatives. do we need this?
+# Update-alternatives. do we need this?
+a=0
+ls /usr/pgsql-$PGVER/bin/ | grep -v postmaster | xargs -I{} sudo update-alternatives --install /usr/bin/{} pgsql-{}  /usr/pgsql-$PGVER/bin/{} $PGVER2$a
 
 # Add firewall exception for postgres. 
 firewall-cmd --permanent --zone=public --add-service=postgresql

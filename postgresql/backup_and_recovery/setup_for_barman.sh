@@ -7,8 +7,6 @@ createuser -s -W barman # create in db?
 # PostgreSQL WAL archiving and replication postgresql.conf
 # wal_level = 'replica' or 'hot_standby' for 9.6
 
-# PostgreSQL streaming connection
-# on db server 
 createuser -W --replication streaming_barman # create in db?
 # add passw to .pgpass on barman server
 # barman@backup$ psql -U streaming_barman -h pg -c "IDENTIFY_SYSTEM" replication=1
@@ -35,7 +33,7 @@ barman receive-wal --create-slot pg
 # Creating physical replication slot 'barman' on server 'pg'
 # Replication slot 'barman' created
 
-# to cron ?
+# to cron ? mean barman cron
 # barman receive-wal <server_name>
 
 barman show-server pg
