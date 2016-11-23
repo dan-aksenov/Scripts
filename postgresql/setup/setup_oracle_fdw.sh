@@ -4,6 +4,13 @@
 # gcc required
 # oracle instant client(clietn,sqlplus,sdk) required
 
+cd /tmp
+wget http://download.oracle.com/otn/linux/instantclient/121020/oracle-instantclient12.1-basic-12.1.0.2.0-1.x86_64.rpm
+wget http://download.oracle.com/otn/linux/instantclient/121020/oracle-instantclient12.1-sqlplus-12.1.0.2.0-1.x86_64.rpm
+wget http://download.oracle.com/otn/linux/instantclient/121020/oracle-instantclient12.1-devel-12.1.0.2.0-1.x86_64.rpm
+
+yum install -y oracle-*
+
 export LD_LIBRARY_PATH=/usr/lib/oracle/12.1/client64/lib
 #or
 cat /etc/ld.so.conf.d/oracle.conf <<EOF
