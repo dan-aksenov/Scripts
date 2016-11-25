@@ -1,19 +1,34 @@
+pg_host=$1
+
+ssh-copy-id postgres@$pg_host
+barman receive-wal --create-slot $pg_host
+
 # PostgreSQL connection
 # on db server
-createuser -s -W barman # create in db?
-# add passw to .pgpass on barman server
-# barman@backup$ psql -c 'SELECT version()' -U barman -h pg postgres
+# createuser -s -W barman # create in db?
+ssh postgres@$pg_host psql -c "create user barman with password 'barman'"
+# createuser -W --replication streaming_barman # create in db?
+ssh postgres@$pg_host psql -c "create user streaming_barman with password 'barman'"
 
 # PostgreSQL WAL archiving and replication postgresql.conf
 # wal_level = 'replica' or 'hot_standby' for 9.6
-
-createuser -W --replication streaming_barman # create in db?
-# add passw to .pgpass on barman server
-# barman@backup$ psql -U streaming_barman -h pg -c "IDENTIFY_SYSTEM" replication=1
+ssh postgres@$pg_host sed -i -e "s/#wal_level = 'minimal'/wal_level = 'hot_standby'/g" /var/lib/pgsql/*/data/postgresql.conf
 
 # add postgresql.conf
 # max_wal_senders = 2
 # max_replication_slots = 2
+ssh postgres@$pg_host sed -i -e "s/#max_wal_senders = 0/max_wal_senders = 2/g" /var/lib/pgsql/*/data/postgresql.conf
+ssh postgres@$pg_host sed -i -e "s/#max_replication_slots = 0/max_replication_slots = 2/g" /var/lib/pgsql/*/data/postgresql.conf
+
+# add passw to .pgpass on barman server
+cat >>.pgpass << EOF
+$pg_host:5432:postgres:barman:barman
+$pg_host:5432:postgres:streaming_barman:barman
+EOF
+
+# testconnection
+psql -c 'SELECT version()' -U barman -h $pg_host postgres
+psql -U streaming_barman -h $pg_host -c "IDENTIFY_SYSTEM" replication=1
 
 # on barman server
 # Server configuration file (on barman server) /etc/barman.d/pg.conf
@@ -26,17 +41,30 @@ createuser -W --replication streaming_barman # create in db?
 # streaming_archiver = on
 # slot_name = barman
 
-# gen key for barman
-# ssh-keygen
-ssh-copy-id dbhost
-barman receive-wal --create-slot pg
-# Creating physical replication slot 'barman' on server 'pg'
-# Replication slot 'barman' created
+# not working
+cat > /tmp/$pg_host.conf << EOF
+[$pg_host]
+description =  "Some PostgreSQL server"
+conninfo = host=$pg_host user=barman dbname=postgres
+backup_method = postgres
+streaming_conninfo = host=$pg_host user=streaming_barman dbname=postgres
+streaming_archiver = on
+slot_name = barman
+EOF
 
-# to cron ? mean barman cron
-# barman receive-wal <server_name>
+sudo cp /tmp/$pg_host.conf /etc/barman.d/
 
-barman show-server pg
-barman check  pg
-barman backup pg
-barman list-backup pg
+barman cron
+barman check pg
+
+crontab -l > /tmp/cron.tmp
+echo "0 1 * * * barman backup $pg_host &>/var/lib/barman/log/backup_$pg_host.log" >> /tmp/cron.tmp
+crontab /tmp/cron.tmp
+rm /tmp/cron.tmp
+
+# barman receive-wal $pg_host is handled by barman cron 
+
+# list of barman commands
+# barman show-server pg
+# barman backup pg
+# barman list-backup pg
