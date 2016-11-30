@@ -5,10 +5,8 @@ barman receive-wal --create-slot $pg_host
 
 # PostgreSQL connection
 # on db server
-# createuser -s -W barman # create in db?
-ssh postgres@$pg_host psql -c "create user barman with password 'barman'"
-# createuser -W --replication streaming_barman # create in db?
-ssh postgres@$pg_host psql -c "create user streaming_barman with password 'barman'"
+createuser -h $pg_host -s -W -P -U postgres barman 
+createuser -h $pg_host -s -W -P -U postgres --replication streaming_barman 
 
 # PostgreSQL WAL archiving and replication postgresql.conf
 # wal_level = 'replica' or 'hot_standby' for 9.6
