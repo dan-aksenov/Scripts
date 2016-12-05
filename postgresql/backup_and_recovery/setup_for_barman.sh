@@ -9,12 +9,7 @@ createuser -h $pg_host -s -W -P -U postgres barman
 createuser -h $pg_host -s -W -P -U postgres --replication streaming_barman 
 
 # PostgreSQL WAL archiving and replication postgresql.conf
-# wal_level = 'replica' or 'hot_standby' for 9.6
 ssh postgres@$pg_host sed -i -e "s/#wal_level = 'minimal'/wal_level = 'hot_standby'/g" /var/lib/pgsql/*/data/postgresql.conf
-
-# add postgresql.conf
-# max_wal_senders = 2
-# max_replication_slots = 2
 ssh postgres@$pg_host sed -i -e "s/#max_wal_senders = 0/max_wal_senders = 2/g" /var/lib/pgsql/*/data/postgresql.conf
 ssh postgres@$pg_host sed -i -e "s/#max_replication_slots = 0/max_replication_slots = 2/g" /var/lib/pgsql/*/data/postgresql.conf
 
@@ -39,7 +34,6 @@ psql -U streaming_barman -h $pg_host -c "IDENTIFY_SYSTEM" replication=1
 # streaming_archiver = on
 # slot_name = barman
 
-# not working
 cat > /tmp/$pg_host.conf << EOF
 [$pg_host]
 description =  "Some PostgreSQL server"
