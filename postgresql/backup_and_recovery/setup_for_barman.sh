@@ -32,7 +32,8 @@ ssh postgres@$pg_host sed -i -e "s/#max_wal_senders = 0/max_wal_senders = 2/g" /
 ssh postgres@$pg_host sed -i -e "s/#max_replication_slots = 0/max_replication_slots = 2/g" /var/lib/pgsql/*/data/postgresql.conf
 
 barman cron
-barman check pg
+barman switch-xlog --force $pg_host
+barman check $pg_host
 
 crontab -l > /tmp/cron.tmp
 echo "0 1 * * * barman backup $pg_host &>/var/lib/barman/log/backup_$pg_host.log" >> /tmp/cron.tmp
@@ -41,7 +42,7 @@ rm /tmp/cron.tmp
 
 # barman receive-wal $pg_host is handled by barman cron 
 
-# list of barman commands
-# barman show-server pg
-# barman backup pg
-# barman list-backup pg
+## list of barman commands
+# barman show-server $pg_host
+# barman backup $pg_host
+# barman list-backup $pg_host
