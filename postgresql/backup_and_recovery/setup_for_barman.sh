@@ -26,12 +26,12 @@ EOF
 psql -c 'SELECT version()' -U barman -h $pg_host postgres
 psql -U streaming_barman -h $pg_host -c "IDENTIFY_SYSTEM" replication=1
 
-barman receive-wal --create-slot $pg_host
-
 # PostgreSQL WAL archiving and replication postgresql.conf
 ssh postgres@$pg_host sed -i -e "s/#wal_level = 'minimal'/wal_level = 'hot_standby'/g" /var/lib/pgsql/*/data/postgresql.conf
 ssh postgres@$pg_host sed -i -e "s/#max_wal_senders = 0/max_wal_senders = 2/g" /var/lib/pgsql/*/data/postgresql.conf
 ssh postgres@$pg_host sed -i -e "s/#max_replication_slots = 0/max_replication_slots = 2/g" /var/lib/pgsql/*/data/postgresql.conf
+
+barman receive-wal --create-slot $pg_host
 
 barman cron
 barman switch-xlog --force $pg_host
