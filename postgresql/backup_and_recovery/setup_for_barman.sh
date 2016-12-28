@@ -21,6 +21,8 @@ $pg_host:5432:postgres:barman:barman
 $pg_host:5432:postgres:streaming_barman:barman
 EOF
 
+# to do: add pg_hba on target!
+
 psql -c 'SELECT version()' -U barman -h $pg_host postgres
 psql -U streaming_barman -h $pg_host -c "IDENTIFY_SYSTEM" replication=1
 
