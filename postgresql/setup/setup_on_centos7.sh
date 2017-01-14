@@ -24,6 +24,8 @@ yum -y localinstall http://yum.postgresql.org/$PGVER/redhat/rhel-7-x86_64/pgdg-$
 # Check for latest repo verstion. And update if found one.
 yum -y update pgdg-centos$PGVER2
 
+#todo disable postgresql searchig in all other repos(or make priorities?)
+
 # Install postgres main stuff
 yum -y install postgresql$PGVER2 postgresql$PGVER2-server postgresql$PGVER2-contrib postgresql$PGVER2-libs 
 
