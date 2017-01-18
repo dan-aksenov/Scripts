@@ -14,13 +14,13 @@ fi
 # End of variables section.
 
 # Check connection
-wget --spider http://yum.postgresql.org
+wget --spider http://yum.postgresql.org/$PGVER/redhat/rhel-7-x86_64/pgdg-$DIST$PGVER2-$PGVER-1.noarch.rpm
 if [ "$?" != 0 ]; then
   echo "Unable to connect to yum.postgresql.org. Check network of proxy settints."
 fi
 
 # Add Posgresql repo
-yum -y localinstall http://yum.postgresql.org/$PGVER/redhat/rhel-7-x86_64/pgdg-$DIST$PGVER2-$PGVER-1.noarch.rpm
+yum -y install http://yum.postgresql.org/$PGVER/redhat/rhel-7-x86_64/pgdg-$DIST$PGVER2-$PGVER-1.noarch.rpm
 # Check for latest repo verstion. And update if found one.
 yum -y update pgdg-centos$PGVER2
 
