@@ -37,10 +37,11 @@ barman cron
 barman switch-xlog --force $pg_host
 barman check $pg_host
 
-crontab -l > /tmp/cron.tmp
-echo "0 1 * * * barman backup $pg_host &>/var/lib/barman/log/backup_$pg_host.log" >> /tmp/cron.tmp
-crontab /tmp/cron.tmp
-rm /tmp/cron.tmp
+# this not need cos all now backedup with backup_with_barman_all.sh 
+# crontab -l > /tmp/cron.tmp
+# echo "0 1 * * * barman backup $pg_host &>/var/lib/barman/log/backup_$pg_host.log" >> /tmp/cron.tmp
+# crontab /tmp/cron.tmp
+# rm /tmp/cron.tmp
 
 # barman receive-wal $pg_host is handled by barman cron 
 
