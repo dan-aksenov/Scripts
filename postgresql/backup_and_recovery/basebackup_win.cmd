@@ -16,10 +16,11 @@ set OFFSITE=\\192.168.1.250\db_backups\Postgres
 set BKP_DIR=D:\postgres_bkp\basebackup\backup
 set ARC_DIR=D:\postgres_bkp\basebackup\arch
 
+IF NOT EXIST %BKP_DIR% MD %BKP_DIR%
+
 rem Variables for timestamp and file names.
 set stamp=%time:~0,2%%time:~3,2%%time:~6,2%_%date:~-10,2%%date:~-7,2%%date:~-4,4%
-set dmp="%BKP_DIR%\%base%_%stamp%.backup"
-set log="%BKP_DIR%\%base%_%stamp%.log"
+set log="%BKP_DIR%\%stamp%.log"
 
 
 rem Delete old files
@@ -27,9 +28,9 @@ forfiles -p %BKP_DIR% -s -m *.* /D -%keep% /C "cmd /c del @path"
 forfiles -p %ARC_DIR% -s -m *.* /D -%keep% /C "cmd /c del @path"
 
 rem Backup DB
-IF NOT EXIST Backup MD Backup
+
 mkdir %BKP_DIR%\%stamp%
-pg_basebackup -l "basebackup_%stamp%" -U postgres -D %BKP_DIR%\%stamp% -F t -P -v -x -z
+pg_basebackup -l "basebackup_%stamp%" -U postgres -D %BKP_DIR%\%stamp% -F t -P -v -x -z 2>%log%
 
 rem Error section
 IF NOT %ERRORLEVEL%==0 GOTO Error
