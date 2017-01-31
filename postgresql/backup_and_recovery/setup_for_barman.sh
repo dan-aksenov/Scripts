@@ -36,6 +36,7 @@ barman receive-wal --create-slot $pg_host
 barman cron
 barman switch-xlog --force $pg_host
 barman check $pg_host
+barman backup $pg_host
 
 # this not need cos all now backedup with backup_with_barman_all.sh 
 # crontab -l > /tmp/cron.tmp
