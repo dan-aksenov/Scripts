@@ -30,6 +30,11 @@ rem Backup DB
 mkdir "%BKP_DIR%\%stamp%"
 pg_basebackup -l "basebackup_%stamp%" -U postgres -D "%BKP_DIR%\%stamp%" -F t -P -v -x -z 2>%log%
 
+rem Del old archives
+for /f "tokens=*" %%a in ('dir %ARC_DIR%\*.backup /b /od') do set newest=%%a
+pg_archivecleanup %ARC_DIR% %newest%
+del %newest%
+
 rem Error section
 IF NOT %ERRORLEVEL%==0 GOTO Error
 GOTO End
@@ -39,4 +44,4 @@ rem powershell -file mail.ps1 %log%
 
 :End
 rem Copy to FS
-robocopy d:\postgres_bkp\basebackup %OFFSITE%\basebackup *.* /z /s /MIR /mt /log:.\remote_backup.log
+robocopy %BKP_DIR% %OFFSITE%\basebackup *.* /z /s /MIR /mt /log:.\remote_backup.log
