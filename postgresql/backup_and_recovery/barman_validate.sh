@@ -10,9 +10,7 @@ dir=/var/lib/pgsql/$ver/stage
 send_to=aksenov_d@tii.ru
 
 # Remove and recreate sandbox directory if exists
-sudo -u postgres test -d $dir &&
-sudo -u postgres rm -rf $dir &&
-sudo -u postgres mkdir $dir
+sudo -u postgres test -d $dir && sudo -u postgres rm -rf $dir && sudo -u postgres mkdir $dir
 
 # Restore from latest barman backup
 barman recover $pg latest $dir --remote-ssh-command "ssh postgres@pg-barman"
@@ -36,8 +34,7 @@ sudo chmod 664 $dir/pg_xlog/$xlog
 # Starting database using correct binaries
 sudo -u postgres /usr/pgsql-$ver/bin/pg_ctl start -D $dir -w -t 10 -l /var/lib/pgsql/$ver/stage/pg_log/postgres-$dow.log
 
-# Send recovery results to DBA 
-sudo -u postgres cat /var/lib/pgsql/$ver/stage/pg_log/postgres-$dow.log | mail -s "Barman backup validation for $pg" "$send_to"
+sudo -u postgres cat /var/lib/pgsql/$ver/stage/pg_log/postgres-$dow.log | mail -s "Barman backup validation for $pg" $send_to
 
 # Shutdown database and remove stageing area.
 sudo -u postgres /usr/pgsql-$ver/bin/pg_ctl stop -D $dir -m fast
