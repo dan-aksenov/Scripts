@@ -1,7 +1,7 @@
 # Database to recover
 pg=$1
 # Postgresql server version
-ver=$(barman status $pg | grep Data | cut -d "/" -f 5)
+ver=$(barman status moe-lkk-db | grep -e "PostgreSQL version" | cut -d " " -f 3 | cut -d "." -f 1,2)
 # Current day of week (to read correct log)
 dow=$(date --date=${dateinfile#?_} "+%A"|cut -c -3)
 # Sandbox directory
