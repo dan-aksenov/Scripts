@@ -3,7 +3,7 @@ pg_host=$1
 ssh-copy-id postgres@$pg_host
 cat > /tmp/$pg_host.conf << EOF
 [$pg_host]
-description =  "Some PostgreSQL server"
+description =  "$pg_host PostgreSQL server"
 conninfo = host=$pg_host user=barman dbname=postgres
 backup_method = postgres
 streaming_conninfo = host=$pg_host user=streaming_barman dbname=postgres
