@@ -74,6 +74,9 @@ EOF
 sudo systemctl start snort
 sudo systemctl enable snort
 
+sudo firewall-cmd --permanent --zone=public --add-service http
+sudo firewall-cmd --reload
+
 # Installing base
 yum install httpd yum-utils php-pear php-pgsql php-mbstring php php-adodb
 
