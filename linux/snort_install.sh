@@ -90,3 +90,34 @@ Alias /base/ /var/www/base/
   AllowOverride All
 </Directory>
 EOF
+
+# pulledpork(srnot rules updater) install 
+# install required pearls
+sudo yum install perl-libwww-perl perl-Crypt-SSLeay perl-Sys-Syslog perl-Archive-Tar perl-LWP-Protocol-https
+git clone https://github.com/shirkdog/pulledpork
+tar xzvf pulledpork-master.tar.gz
+cd pulledpork
+sudo cp pulledpork.pl /usr/local/bin
+sudo chmod +x /usr/local/bin/pulledpork.pl
+sudo cp etc/*.conf /etc/snort
+
+user@snortserver:~$ /usr/local/bin/pulledpork.pl -V
+
+sudo vim /etc/snort/pulledpork.conf
+
+# edit:
+#Line 19:  enter your oinkcode where appropriate (or comment out if no oinkcode)
+#Line 29:  Un-comment for Emerging threats ruleset (not tested with this guide)
+#Line 74:  change to: rule_path=/etc/snort/rules/snort.rules
+#Line 89:  change to: local_rules=/etc/snort/rules/local.rules
+#Line 92:  change to: sid_msg=/etc/snort/sid-msg.map
+#Line 96:  change to: sid_msg_version=2
+#Line 119:  change to: config_path=/etc/snort/snort.conf
+#Line 133:  change to: distro=Ubuntu-12-04
+#Line 141:  change to: black_list=/etc/snort/rules/iplists/black_list.rules
+#Line 150:  change to: IPRVersion=/etc/snort/rules/iplists
+
+sudo /usr/local/bin/pulledpork.pl -c /etc/snort/pulledpork.conf -l
+
+crontab -e 
+1 0 * * * /usr/local/bin/pulledpork.pl -c /etc/snort/pulledpork.conf -l
