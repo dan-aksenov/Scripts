@@ -34,6 +34,9 @@ sudo chmod 664 $dir/pg_xlog/$xlog
 # Starting database using correct binaries
 sudo -u postgres /usr/pgsql-$ver/bin/pg_ctl start -D $dir -w -t 10 -l /var/lib/pgsql/$ver/stage/pg_log/postgres-$dow.log
 
+# Wait until database fully starts... NEED SOME BETTER WAY to this!
+sleep 30
+
 # Send recovery results to DBA
 sudo -u postgres cat /var/lib/pgsql/$ver/stage/pg_log/postgres-$dow.log | mail -s "Barman backup validation for $pg" $send_to
 
