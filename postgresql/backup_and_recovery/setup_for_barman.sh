@@ -27,22 +27,28 @@ $pg_host:5432:postgres:barman:barman
 $pg_host:5432:postgres:streaming_barman:barman
 EOF
 
-# to do: add pg_hba on target!
+# Add pg_hba on target
+ssh postgres@$pg_host 'echo "host all barman 192.168.155.224/23 md5" > /var/lib/pgsql/*/data/pg_hba.conf'
+ssh postgres@$pg_host 'echo "host replication streaming_barman 192.168.155.224/23 trust" > /var/lib/pgsql/*/data/pg_hba.conf'
 
 # Check if barman can actually connect to target database.
 psql -c 'SELECT version()' -U barman -h $pg_host postgres
 psql -U streaming_barman -h $pg_host -c "IDENTIFY_SYSTEM" replication=1
 
 # PostgreSQL WAL archiving and replication postgresql.conf
-ssh postgres@$pg_host sed -i -e "s/#wal_level = 'minimal'/wal_level = 'hot_standby'/g" /var/lib/pgsql/*/data/postgresql.conf
-ssh postgres@$pg_host sed -i -e "s/#max_wal_senders = 0/max_wal_senders = 2/g" /var/lib/pgsql/*/data/postgresql.conf
-ssh postgres@$pg_host sed -i -e "s/#max_replication_slots = 0/max_replication_slots = 2/g" /var/lib/pgsql/*/data/postgresql.conf
+# Should be configured in initial postgres.conf!
+# ssh postgres@$pg_host sed -i -e "s/#wal_level = 'minimal'/wal_level = 'hot_standby'/g" /var/lib/pgsql/*/data/postgresql.conf
+# ssh postgres@$pg_host sed -i -e "s/#max_wal_senders = 0/max_wal_senders = 2/g" /var/lib/pgsql/*/data/postgresql.conf
+# ssh postgres@$pg_host sed -i -e "s/#max_replication_slots = 0/max_replication_slots = 2/g" /var/lib/pgsql/*/data/postgresql.conf
 
 # Create replication slot on barman server
 barman receive-wal --create-slot $pg_host
 
-# Barman commands cheatsheet
-barman cron
+# Force initial xlog switch
 barman switch-xlog --force $pg_host
-barman check $pg_host
-barman backup $pg_host
+
+echo Barman commands cheatsheet:
+echo barman cron
+echo barman switch-xlog --force $pg_host
+echo barman check $pg_host
+echo barman backup $pg_host
