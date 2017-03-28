@@ -56,7 +56,7 @@ make && sudo make install
 # check you database name host and user!
 sudo -u postgres psql snort -f /tmp/create_postgresql
 
-sudo mkir /var/log/barnyard2
+sudo mkdir /var/log/barnyard2
 
 cat > /lib/systemd/system/barnyard2.service << EOF
 [Unit]
