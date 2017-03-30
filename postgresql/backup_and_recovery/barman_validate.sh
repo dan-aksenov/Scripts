@@ -40,6 +40,6 @@ sleep 30
 # Send recovery results to DBA
 sudo -u postgres cat /var/lib/pgsql/$ver/stage/pg_log/postgres-$dow.log | mail -s "Barman backup validation for $pg" $send_to
 
-# Shutdown database and remove stageing area.
+# Shutdown database and remove staging area.
 sudo -u postgres /usr/pgsql-$ver/bin/pg_ctl stop -D $dir -m fast
 sudo -u postgres test -d $dir && sudo -u postgres rm -rf $dir
