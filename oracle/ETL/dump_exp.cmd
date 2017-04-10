@@ -2,7 +2,7 @@ rem name for archive file
 set arch=%date:~-10,2%%date:~-7,2%%date:~-4,4%
 
 rem daily or weekly backup
-tag=backup_week
+set tag=backup_week
 
 rem directories
 set backup_dir=d:\%tag%\dumps
