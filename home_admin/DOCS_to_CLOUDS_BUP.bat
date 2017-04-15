@@ -9,7 +9,7 @@ set src="f:\Users\danila\Documents"
 
 rem set Wdmycloud destination
 set dst="\\WDMYCLOUD\danila\!BUPS\Documents"
-set log=/unilog:"%log_dir%\photo_to_mycloud.log"
+set log=/unilog:"%log_dir%\docs_to_mycloud.log"
 
 robocopy %src% %dst% *.* %log% /tee /z /mir /mt
  
