@@ -1,16 +1,17 @@
 chcp 1251
 
-set log="d:\TMP"
-set src="h:\Users\Данила\Videos"
+set log="f:\TMP"
+set src="e:\Users\danila\Videos"
 
 IF NOT EXIST %log% MD %log%
 
 set dst="\\wdmycloud\danila\!BUPS\Videos"
 
+rem get difference
 robocopy %src% %dst% *.* /s /purge /l /nfl /njh /ndl
 pause
 
-robocopy %src% %dst% *.* /unilog:%log%\video_to_mycloud.log /z /purge /s
-forfiles -p %log% -s -m *.* /D -10 /C "cmd /c del @path"
+rem copy itself
+robocopy %src% %dst% *.* /unilog:%log%\video_to_mycloud.log /tee /z /purge /s /mt
  
 pause
