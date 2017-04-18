@@ -1,0 +1,381 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<displays>
+<display id="2f49cc0d-014e-1000-8017-c0a89bf148b8" type="" style="Table" enable="true">
+	<name><![CDATA[DRILLDOWN_TOP_BLOCKED_SESSIONS]]></name>
+	<description><![CDATA[]]></description>
+	<tooltip><![CDATA[]]></tooltip>
+	<drillclass><![CDATA[null]]></drillclass>
+	<CustomValues>
+		<TYPE>horizontal</TYPE>
+	</CustomValues>
+	<query>
+		<sql><![CDATA[with ash_blocked as (        
+   select /*+ inline */ blocking_session, blocking_session_serial#, blocking_inst_id sess_blocking_inst_id, 
+   count(*) cnt_blocked from v$active_session_history ash
+   where ash.sample_time >= nvl(to_date(:TIME_MI, 'yyyy-mm-dd hh24:mi:ss'), sysdate) - 30 / (24 * 60 * 60)
+   and ash.sample_time <= nvl(to_date(:TIME_MI, 'yyyy-mm-dd hh24:mi:ss'), sysdate)
+   and blocking_session is not null     
+   group by blocking_session, blocking_session_serial#, blocking_inst_id   
+), ash_sess as (
+select /*+ materialize */ ash.session_id, ash.session_serial#, 
+b.sess_blocking_inst_id, b.cnt_blocked,   count(*) cnt,
+ash.program, ash.module, ash.action, ash.machine, 
+ash.user_id, ash.blocking_session, ash.blocking_session_serial#, ash.blocking_inst_id, 
+  sum(case when ash.session_state = 'WAITING' then 1 else 0 end) waiting,
+  sum(case when ash.in_parse = 'Y' then 1 else 0 end) in_parse, 
+  sum(case when ash.in_hard_parse = 'Y' then 1 else 0 end) in_hard_parse,
+  sum(case when ash.in_sql_execution = 'Y' then 1 else 0 end) in_sql_execution,
+  sum(case when ash.in_plsql_execution = 'Y' then 1 else 0 end) in_plsql_execution,
+  sum(case when ash.in_plsql_compilation = 'Y' then 1 else 0 end) in_plsql_compilation,
+  sum(case when ash.in_java_execution = 'Y' then 1 else 0 end) in_java_execution,
+  sum(case when ash.in_bind = 'Y' then 1 else 0 end) in_bind,
+  sum(case when ash.in_cursor_close = 'Y' then 1 else 0 end) in_cursor_close,
+  sum(case when ash.in_sequence_load = 'Y' then 1 else 0 end) in_sequence_load from v$active_session_history ash, ash_blocked b
+where ash.session_id = b.blocking_session and ash.session_serial#=b.blocking_session_serial#
+and ash.sample_time >= nvl(to_date(:TIME_MI, 'yyyy-mm-dd hh24:mi:ss'), sysdate) - 30 / (24 * 60 * 60)
+and ash.sample_time <= nvl(to_date(:TIME_MI, 'yyyy-mm-dd hh24:mi:ss'), sysdate)
+group by ash.session_id, ash.session_serial#, ash.program, ash.module, ash.action, ash.machine, 
+ash.user_id, ash.blocking_session, ash.blocking_session_serial#, ash.blocking_inst_id, b.sess_blocking_inst_id, b.cnt_blocked
+)
+select :TIME_MI TIME_MI_LV2, s.* from ash_sess s
+order by cnt_blocked desc]]></sql>
+		<binds>
+			<bind id="TIME_MI">
+				<prompt><![CDATA[TIME_MI]]></prompt>
+				<tooltip><![CDATA[TIME_MI]]></tooltip>
+				<value><![CDATA[NULL_VALUE]]></value>
+				<bracket><![CDATA[null]]></bracket>
+			</bind>
+		</binds>
+	</query>
+		<pdf version="VERSION_1_7" compression="CONTENT">
+			<docproperty title="null" author="null" subject="null" keywords="null" />
+			<cell toppadding="2" bottompadding="2" leftpadding="2" rightpadding="2" horizontalalign="LEFT" verticalalign="TOP" wrap="true" />
+			<column>
+				<heading font="null" size="10" style="NORMAL" color="-16777216" rowshading="-1" labeling="FIRST_PAGE" />
+				<footing font="null" size="10" style="NORMAL" color="-16777216" rowshading="-1" labeling="NONE" />
+				<blob blob="NONE" zip="false" />
+			</column>
+			<table font="null" size="10" style="NORMAL" color="-16777216" userowshading="false" oddrowshading="-1" evenrowshading="-1" showborders="true" spacingbefore="12" spacingafter="12" horizontalalign="LEFT" />
+			<header enable="false" generatedate="false">
+				<data>
+				null				</data>
+			</header>
+			<footer enable="false" generatedate="false">
+				<data value="null" />
+			</footer>
+			<security enable="false" useopenpassword="false" openpassword="null" encryption="EXCLUDE_METADATA">
+				<permission enable="false" permissionpassword="null" allowcopying="true" allowprinting="true" allowupdating="false" allowaccessdevices="false" />
+			</security>
+			<pagesetup papersize="LETTER" orientation="1" measurement="in" margintop="1.0" marginbottom="1.0" marginleft="1.0" marginright="1.0" />
+		</pdf>
+	<display id="null" type="" style="Table" enable="true">
+		<name><![CDATA[TOP_EVENTS]]></name>
+		<description><![CDATA[]]></description>
+		<tooltip><![CDATA[]]></tooltip>
+		<drillclass><![CDATA[null]]></drillclass>
+		<CustomValues>
+			<TYPE>horizontal</TYPE>
+		</CustomValues>
+		<query>
+			<sql><![CDATA[with ash_sql as (  
+  select case when ash.event is null then 'ON_CPU' else ash.event end event, 
+  case when ash.wait_class is null then 'ON_CPU' else ash.wait_class end wait_class, count(*) cnt
+    from v$active_session_history ash
+    where ash.sample_time >= nvl(to_date(:TIME_MI_LV2, 'yyyy-mm-dd hh24:mi:ss'), sysdate) - 30 / (24 * 60 * 60)
+    and ash.sample_time <= nvl(to_date(:TIME_MI_LV2, 'yyyy-mm-dd hh24:mi:ss'), sysdate)
+    and ash.session_id = :SESSION_ID and ash.session_serial# = :SESSION_SERIAL#  
+  group by ash.event, ash.wait_class 
+)
+select :TIME_MI_LV2, a.*, round(ratio_to_report(CNT) over()*100, 2) proc_total from  ash_sql a   
+order by 5 desc]]></sql>
+			<binds>
+				<bind id="TIME_MI_LV2">
+					<prompt><![CDATA[TIME_MI_LV2]]></prompt>
+					<tooltip><![CDATA[TIME_MI_LV2]]></tooltip>
+					<value><![CDATA[NULL_VALUE]]></value>
+					<bracket><![CDATA[null]]></bracket>
+				</bind>
+				<bind id="SESSION_ID">
+					<prompt><![CDATA[SESSION_ID]]></prompt>
+					<tooltip><![CDATA[SESSION_ID]]></tooltip>
+					<value><![CDATA[NULL_VALUE]]></value>
+					<bracket><![CDATA[null]]></bracket>
+				</bind>
+				<bind id="SESSION_SERIAL#">
+					<prompt><![CDATA[SESSION_SERIAL#]]></prompt>
+					<tooltip><![CDATA[SESSION_SERIAL#]]></tooltip>
+					<value><![CDATA[NULL_VALUE]]></value>
+					<bracket><![CDATA[null]]></bracket>
+				</bind>
+			</binds>
+		</query>
+			<pdf version="VERSION_1_7" compression="CONTENT">
+				<docproperty title="null" author="null" subject="null" keywords="null" />
+				<cell toppadding="2" bottompadding="2" leftpadding="2" rightpadding="2" horizontalalign="LEFT" verticalalign="TOP" wrap="true" />
+				<column>
+					<heading font="null" size="10" style="NORMAL" color="-16777216" rowshading="-1" labeling="FIRST_PAGE" />
+					<footing font="null" size="10" style="NORMAL" color="-16777216" rowshading="-1" labeling="NONE" />
+					<blob blob="NONE" zip="false" />
+				</column>
+				<table font="null" size="10" style="NORMAL" color="-16777216" userowshading="false" oddrowshading="-1" evenrowshading="-1" showborders="true" spacingbefore="12" spacingafter="12" horizontalalign="LEFT" />
+				<header enable="false" generatedate="false">
+					<data>
+					null					</data>
+				</header>
+				<footer enable="false" generatedate="false">
+					<data value="null" />
+				</footer>
+				<security enable="false" useopenpassword="false" openpassword="null" encryption="EXCLUDE_METADATA">
+					<permission enable="false" permissionpassword="null" allowcopying="true" allowprinting="true" allowupdating="false" allowaccessdevices="false" />
+				</security>
+				<pagesetup papersize="LETTER" orientation="1" measurement="in" margintop="1.0" marginbottom="1.0" marginleft="1.0" marginright="1.0" />
+			</pdf>
+	</display>
+	<display id="null" type="" style="Table" enable="true">
+		<name><![CDATA[TOP_SQL]]></name>
+		<description><![CDATA[]]></description>
+		<tooltip><![CDATA[]]></tooltip>
+		<drillclass><![CDATA[null]]></drillclass>
+		<CustomValues>
+			<TYPE>horizontal</TYPE>
+		</CustomValues>
+		<query>
+			<sql><![CDATA[with ash_sql as (  
+     select ash.sql_id, ash.user_id,
+         sum (decode (ash.session_state, 'ON CPU', 1, 0)) cpu,
+         sum (decode (ash.session_state, 'WAITING', 1, 0))  - sum (decode (ash.session_state,'WAITING', decode (ash.wait_class, 'User I/O', 1, 0), 0)) wait,
+         sum (decode (ash.session_state, 'WAITING', decode (ash.wait_class, 'User I/O', 1, 0), 0)) io,
+         count(*) total,
+         sum(case when in_parse = 'Y' then 1 else 0 end) in_parse, 
+         sum(case when in_hard_parse = 'Y' then 1 else 0 end) in_hard_parse,
+         sum(case when in_sql_execution = 'Y' then 1 else 0 end) in_sql_execution,
+         sum(case when in_plsql_execution = 'Y' then 1 else 0 end) in_plsql_execution,
+         sum(case when in_plsql_compilation = 'Y' then 1 else 0 end) in_plsql_compilation,
+         sum(case when in_java_execution = 'Y' then 1 else 0 end) in_java_execution,
+         sum(case when in_bind = 'Y' then 1 else 0 end) in_bind,
+         sum(case when in_cursor_close = 'Y' then 1 else 0 end) in_cursor_close,
+         sum(case when in_sequence_load = 'Y' then 1 else 0 end) in_sequence_load,         
+         max (ash.sample_time) last_executed
+     from v$active_session_history ash
+     where sql_id is not null and sample_time >= nvl(to_date(:TIME_MI_LV2, 'yyyy-mm-dd hh24:mi:ss'), sysdate) - 30 / (24 * 60 * 60)
+     and sample_time <= nvl(to_date(:TIME_MI_LV2, 'yyyy-mm-dd hh24:mi:ss'), sysdate)
+     and ash.session_id = :SESSION_ID and ash.session_serial# = :SESSION_SERIAL#
+     group by ash.sql_id, ash.user_id
+)
+select :TIME_MI_LV2, a.cpu, a.wait, a.io, a.total, a.in_parse, a.in_hard_parse, a.in_sql_execution, 
+        a.in_plsql_execution, u.username, a.sql_id, (select s.sql_text from v$sqlstats s where s.sql_id=a.sql_id) txt,
+        a.in_plsql_compilation, a.in_java_execution, a.in_bind, a.in_cursor_close, a.in_sequence_load 
+from  ash_sql a, dba_users u where a.user_id=u.user_id   
+order by 5 desc]]></sql>
+			<binds>
+				<bind id="TIME_MI_LV2">
+					<prompt><![CDATA[TIME_MI_LV2]]></prompt>
+					<tooltip><![CDATA[TIME_MI_LV2]]></tooltip>
+					<value><![CDATA[NULL_VALUE]]></value>
+					<bracket><![CDATA[null]]></bracket>
+				</bind>
+				<bind id="SESSION_ID">
+					<prompt><![CDATA[SESSION_ID]]></prompt>
+					<tooltip><![CDATA[SESSION_ID]]></tooltip>
+					<value><![CDATA[NULL_VALUE]]></value>
+					<bracket><![CDATA[null]]></bracket>
+				</bind>
+				<bind id="SESSION_SERIAL#">
+					<prompt><![CDATA[SESSION_SERIAL#]]></prompt>
+					<tooltip><![CDATA[SESSION_SERIAL#]]></tooltip>
+					<value><![CDATA[NULL_VALUE]]></value>
+					<bracket><![CDATA[null]]></bracket>
+				</bind>
+			</binds>
+		</query>
+			<pdf version="VERSION_1_7" compression="CONTENT">
+				<docproperty title="null" author="null" subject="null" keywords="null" />
+				<cell toppadding="2" bottompadding="2" leftpadding="2" rightpadding="2" horizontalalign="LEFT" verticalalign="TOP" wrap="true" />
+				<column>
+					<heading font="null" size="10" style="NORMAL" color="-16777216" rowshading="-1" labeling="FIRST_PAGE" />
+					<footing font="null" size="10" style="NORMAL" color="-16777216" rowshading="-1" labeling="NONE" />
+					<blob blob="NONE" zip="false" />
+				</column>
+				<table font="null" size="10" style="NORMAL" color="-16777216" userowshading="false" oddrowshading="-1" evenrowshading="-1" showborders="true" spacingbefore="12" spacingafter="12" horizontalalign="LEFT" />
+				<header enable="false" generatedate="false">
+					<data>
+					null					</data>
+				</header>
+				<footer enable="false" generatedate="false">
+					<data value="null" />
+				</footer>
+				<security enable="false" useopenpassword="false" openpassword="null" encryption="EXCLUDE_METADATA">
+					<permission enable="false" permissionpassword="null" allowcopying="true" allowprinting="true" allowupdating="false" allowaccessdevices="false" />
+				</security>
+				<pagesetup papersize="LETTER" orientation="1" measurement="in" margintop="1.0" marginbottom="1.0" marginleft="1.0" marginright="1.0" />
+			</pdf>
+	</display>
+	<display id="null" type="" style="Table" enable="true">
+		<name><![CDATA[TOP_PLSQL]]></name>
+		<description><![CDATA[]]></description>
+		<tooltip><![CDATA[]]></tooltip>
+		<drillclass><![CDATA[null]]></drillclass>
+		<CustomValues>
+			<TYPE>horizontal</TYPE>
+		</CustomValues>
+		<query>
+			<sql><![CDATA[with aggr_ash as (
+select /*+ materialize */
+         p.object_name, p.procedure_name,  
+         sum (decode (ash.session_state, 'ON CPU', 1, 0)) cpu,
+           sum (decode (ash.session_state, 'WAITING', 1, 0))
+         - sum (decode (ash.session_state, 'WAITING', decode (ash.wait_class, 'User I/O', 1, 0), 0)) wait,
+         sum (decode (ash.session_state, 'WAITING', decode (ash.wait_class, 'User I/O', 1, 0), 0)) io,
+         count(*)  total,
+         sum(case when in_parse = 'Y' then 1 else 0 end) in_parse, 
+         sum(case when in_hard_parse = 'Y' then 1 else 0 end) in_hard_parse,
+         sum(case when in_sql_execution = 'Y' then 1 else 0 end) in_sql_execution,
+         sum(case when in_plsql_execution = 'Y' then 1 else 0 end) in_plsql_execution,
+         sum(case when in_plsql_compilation = 'Y' then 1 else 0 end) in_plsql_compilation,
+         sum(case when in_java_execution = 'Y' then 1 else 0 end) in_java_execution,
+         sum(case when in_bind = 'Y' then 1 else 0 end) in_bind,
+         sum(case when in_cursor_close = 'Y' then 1 else 0 end) in_cursor_close,
+         sum(case when in_sequence_load = 'Y' then 1 else 0 end) in_sequence_load,         
+         max (ash.sample_time) last_executed                  
+from v$active_session_history ash, dba_procedures p
+where ash.sample_time >= nvl(to_date(:TIME_MI_LV2, 'yyyy-mm-dd hh24:mi:ss'), sysdate) - 30 / (24 * 60 * 60)
+and ash.sample_time <= nvl(to_date(:TIME_MI_LV2, 'yyyy-mm-dd hh24:mi:ss'), sysdate)
+and ash.session_id = :SESSION_ID and ash.session_serial# = :SESSION_SERIAL#
+and ash.plsql_entry_object_id is not null and  ash.plsql_entry_subprogram_id is not null
+and p.object_id = ash.plsql_entry_object_id and p.subprogram_id=ash.plsql_entry_subprogram_id
+group by p.object_name, p.procedure_name
+)
+select :TIME_MI_LV2, round(ratio_to_report(TOTAL) over()*100, 2) proc_total, a.*
+--, dbms_lob.substr((select wm_concat(s.nm_query) from report.wd_sqlstore s where instr(upper(s.vl_query), a.procedure_name) > 0), 4000) s 
+from aggr_ash a
+order by 2 desc]]></sql>
+			<binds>
+				<bind id="TIME_MI_LV2">
+					<prompt><![CDATA[TIME_MI_LV2]]></prompt>
+					<tooltip><![CDATA[TIME_MI_LV2]]></tooltip>
+					<value><![CDATA[NULL_VALUE]]></value>
+					<bracket><![CDATA[null]]></bracket>
+				</bind>
+				<bind id="SESSION_ID">
+					<prompt><![CDATA[SESSION_ID]]></prompt>
+					<tooltip><![CDATA[SESSION_ID]]></tooltip>
+					<value><![CDATA[NULL_VALUE]]></value>
+					<bracket><![CDATA[null]]></bracket>
+				</bind>
+				<bind id="SESSION_SERIAL#">
+					<prompt><![CDATA[SESSION_SERIAL#]]></prompt>
+					<tooltip><![CDATA[SESSION_SERIAL#]]></tooltip>
+					<value><![CDATA[NULL_VALUE]]></value>
+					<bracket><![CDATA[null]]></bracket>
+				</bind>
+			</binds>
+		</query>
+			<pdf version="VERSION_1_7" compression="CONTENT">
+				<docproperty title="null" author="null" subject="null" keywords="null" />
+				<cell toppadding="2" bottompadding="2" leftpadding="2" rightpadding="2" horizontalalign="LEFT" verticalalign="TOP" wrap="true" />
+				<column>
+					<heading font="null" size="10" style="NORMAL" color="-16777216" rowshading="-1" labeling="FIRST_PAGE" />
+					<footing font="null" size="10" style="NORMAL" color="-16777216" rowshading="-1" labeling="NONE" />
+					<blob blob="NONE" zip="false" />
+				</column>
+				<table font="null" size="10" style="NORMAL" color="-16777216" userowshading="false" oddrowshading="-1" evenrowshading="-1" showborders="true" spacingbefore="12" spacingafter="12" horizontalalign="LEFT" />
+				<header enable="false" generatedate="false">
+					<data>
+					null					</data>
+				</header>
+				<footer enable="false" generatedate="false">
+					<data value="null" />
+				</footer>
+				<security enable="false" useopenpassword="false" openpassword="null" encryption="EXCLUDE_METADATA">
+					<permission enable="false" permissionpassword="null" allowcopying="true" allowprinting="true" allowupdating="false" allowaccessdevices="false" />
+				</security>
+				<pagesetup papersize="LETTER" orientation="1" measurement="in" margintop="1.0" marginbottom="1.0" marginleft="1.0" marginright="1.0" />
+			</pdf>
+	</display>
+	<display id="null" type="" style="Table" enable="true">
+		<name><![CDATA[BLOCKED_SESSIONS]]></name>
+		<description><![CDATA[]]></description>
+		<tooltip><![CDATA[]]></tooltip>
+		<drillclass><![CDATA[null]]></drillclass>
+		<CustomValues>
+			<TYPE>horizontal</TYPE>
+		</CustomValues>
+		<query>
+			<sql><![CDATA[with ash_sql as (
+select a.session_id, a.session_serial#, a.program, a.module, a.action, a.machine, u.username,  
+a.cnt, a.waiting, a.in_parse, a.in_hard_parse, a.in_sql_execution, a.in_plsql_execution, a.in_plsql_compilation, a.in_java_execution, a.in_bind, a.in_cursor_close, a.in_sequence_load, a.sql_id
+from (  
+  select session_id, session_serial#, program, module, action, machine, user_id, sql_id,
+  count(*) cnt, 
+  sum(case when session_state = 'WAITING' then 1 else 0 end) waiting,
+  sum(case when in_parse = 'Y' then 1 else 0 end) in_parse, 
+  sum(case when in_hard_parse = 'Y' then 1 else 0 end) in_hard_parse,
+  sum(case when in_sql_execution = 'Y' then 1 else 0 end) in_sql_execution,
+  sum(case when in_plsql_execution = 'Y' then 1 else 0 end) in_plsql_execution,
+  sum(case when in_plsql_compilation = 'Y' then 1 else 0 end) in_plsql_compilation,
+  sum(case when in_java_execution = 'Y' then 1 else 0 end) in_java_execution,
+  sum(case when in_bind = 'Y' then 1 else 0 end) in_bind,
+  sum(case when in_cursor_close = 'Y' then 1 else 0 end) in_cursor_close,
+  sum(case when in_sequence_load = 'Y' then 1 else 0 end) in_sequence_load  
+    from v$active_session_history ash
+   where ash.sample_time >= nvl(to_date(:TIME_MI_LV2, 'yyyy-mm-dd hh24:mi:ss'), sysdate) - 30 / (24 * 60 * 60)
+   and ash.sample_time <= nvl(to_date(:TIME_MI_LV2, 'yyyy-mm-dd hh24:mi:ss'), sysdate)
+   and ash.blocking_session = :SESSION_ID and ash.blocking_session_serial# = :SESSION_SERIAL#
+   and blocking_inst_id = :SESS_BLOCKING_INST_ID
+   group by session_id, session_serial#, program, module, action, machine, user_id, sql_id
+) a, dba_users u where a.user_id=u.user_id         
+)
+select :TIME_MI_LV2, a.* from  ash_sql a   
+order by cnt desc]]></sql>
+			<binds>
+				<bind id="TIME_MI_LV2">
+					<prompt><![CDATA[TIME_MI_LV2]]></prompt>
+					<tooltip><![CDATA[TIME_MI_LV2]]></tooltip>
+					<value><![CDATA[NULL_VALUE]]></value>
+					<bracket><![CDATA[null]]></bracket>
+				</bind>
+				<bind id="SESSION_ID">
+					<prompt><![CDATA[SESSION_ID]]></prompt>
+					<tooltip><![CDATA[SESSION_ID]]></tooltip>
+					<value><![CDATA[NULL_VALUE]]></value>
+					<bracket><![CDATA[null]]></bracket>
+				</bind>
+				<bind id="SESSION_SERIAL#">
+					<prompt><![CDATA[SESSION_SERIAL#]]></prompt>
+					<tooltip><![CDATA[SESSION_SERIAL#]]></tooltip>
+					<value><![CDATA[NULL_VALUE]]></value>
+					<bracket><![CDATA[null]]></bracket>
+				</bind>
+				<bind id="SESS_BLOCKING_INST_ID">
+					<prompt><![CDATA[SESS_BLOCKING_INST_ID]]></prompt>
+					<tooltip><![CDATA[SESS_BLOCKING_INST_ID]]></tooltip>
+					<value><![CDATA[NULL_VALUE]]></value>
+					<bracket><![CDATA[null]]></bracket>
+				</bind>
+			</binds>
+		</query>
+			<pdf version="VERSION_1_7" compression="CONTENT">
+				<docproperty title="null" author="null" subject="null" keywords="null" />
+				<cell toppadding="2" bottompadding="2" leftpadding="2" rightpadding="2" horizontalalign="LEFT" verticalalign="TOP" wrap="true" />
+				<column>
+					<heading font="null" size="10" style="NORMAL" color="-16777216" rowshading="-1" labeling="FIRST_PAGE" />
+					<footing font="null" size="10" style="NORMAL" color="-16777216" rowshading="-1" labeling="NONE" />
+					<blob blob="NONE" zip="false" />
+				</column>
+				<table font="null" size="10" style="NORMAL" color="-16777216" userowshading="false" oddrowshading="-1" evenrowshading="-1" showborders="true" spacingbefore="12" spacingafter="12" horizontalalign="LEFT" />
+				<header enable="false" generatedate="false">
+					<data>
+					null					</data>
+				</header>
+				<footer enable="false" generatedate="false">
+					<data value="null" />
+				</footer>
+				<security enable="false" useopenpassword="false" openpassword="null" encryption="EXCLUDE_METADATA">
+					<permission enable="false" permissionpassword="null" allowcopying="true" allowprinting="true" allowupdating="false" allowaccessdevices="false" />
+				</security>
+				<pagesetup papersize="LETTER" orientation="1" measurement="in" margintop="1.0" marginbottom="1.0" marginleft="1.0" marginright="1.0" />
+			</pdf>
+	</display>
+</display>
+</displays>

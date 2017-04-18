@@ -1,0 +1,400 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<displays>
+<display id="960a5b8c-0140-1000-8001-c0a89bf14282" type="" style="Chart" enable="true">
+	<name><![CDATA[PERFOMANCE]]></name>
+	<description><![CDATA[]]></description>
+	<tooltip><![CDATA[]]></tooltip>
+	<drillclass><![CDATA[null]]></drillclass>
+	<CustomValues>
+		<Y2AXIS_SCALE_MAXIMUM>80.0</Y2AXIS_SCALE_MAXIMUM>
+		<Y1AXIS_SCALE_MAXIMUM_AUTOMATIC>true</Y1AXIS_SCALE_MAXIMUM_AUTOMATIC>
+		<Y1AXIS_LOGARITHMIC_SCALE>false</Y1AXIS_LOGARITHMIC_SCALE>
+		<LEGEND_LOCATION>AUTOMATIC</LEGEND_LOCATION>
+		<PLOT_SERIES_OPTIONS_COLOR>\,-16764058,-3394816,-16711681,-16751002,-26368</PLOT_SERIES_OPTIONS_COLOR>
+		<Y1AXIS_REFOBJ_COUNT>0</Y1AXIS_REFOBJ_COUNT>
+		<Y1AXIS_REFOBJ_LINE_VALUE>\</Y1AXIS_REFOBJ_LINE_VALUE>
+		<Y1AXIS_SCALE_MAXIMUM>60.0</Y1AXIS_SCALE_MAXIMUM>
+		<Y1AXIS_SCALE_INCREMENT_AUTOMATIC>true</Y1AXIS_SCALE_INCREMENT_AUTOMATIC>
+		<XAXIS_TICK_LABEL_ROTATE>HORIZONTAL</XAXIS_TICK_LABEL_ROTATE>
+		<TYPE>AREA_VERT_STACK</TYPE>
+		<STYLE>Default</STYLE>
+		<TITLE_ALIGNMENT>LEFT</TITLE_ALIGNMENT>
+		<XAXIS_SCALE_MAXIMUM>70.0</XAXIS_SCALE_MAXIMUM>
+		<Y2AXIS_TICK_LABEL_ROTATE>HORIZONTAL</Y2AXIS_TICK_LABEL_ROTATE>
+		<PLOT_HGRID>true</PLOT_HGRID>
+		<PLOT_DATATIPS_VALUE>true</PLOT_DATATIPS_VALUE>
+		<Y2AXIS_LINE_WIDTH>THINNEST</Y2AXIS_LINE_WIDTH>
+		<Y1AXIS_TICK_LABEL_ROTATE>HORIZONTAL</Y1AXIS_TICK_LABEL_ROTATE>
+		<PLOT_HGRID_WIDTH>THINNER</PLOT_HGRID_WIDTH>
+		<PLOT_DATATIPS_CUMULATIVE_VALUE>false</PLOT_DATATIPS_CUMULATIVE_VALUE>
+		<XAXIS_TICK_LABEL_AUTO_ROTATE>true</XAXIS_TICK_LABEL_AUTO_ROTATE>
+		<Y1AXIS_SCALE_INCREMENT>10.0</Y1AXIS_SCALE_INCREMENT>
+		<Y1AXIS_LINE_WIDTH>THINNEST</Y1AXIS_LINE_WIDTH>
+		<PLOT_SERIES_OPTIONS_FITLINE_TYPE>\,NONE,NONE,NONE,NONE,NONE</PLOT_SERIES_OPTIONS_FITLINE_TYPE>
+		<Y1AXIS_TITLE_ALIGNMENT>CENTER</Y1AXIS_TITLE_ALIGNMENT>
+		<LEGEND_ALIGNMENT>LEFT</LEGEND_ALIGNMENT>
+		<PLOT_DATALABELS_SLICE_POSITION>OUTSIDE_SLICE_LINE</PLOT_DATALABELS_SLICE_POSITION>
+		<XAXIS_LINE_WIDTH>THINNEST</XAXIS_LINE_WIDTH>
+		<XAXIS_TITLE_ALIGNMENT>CENTER</XAXIS_TITLE_ALIGNMENT>
+		<PLOT_DATALABELS>false</PLOT_DATALABELS>
+		<XAXIS_LOGARITHMIC_BASE>BASE_10</XAXIS_LOGARITHMIC_BASE>
+		<Y1AXIS_LOGARITHMIC_BASE>BASE_10</Y1AXIS_LOGARITHMIC_BASE>
+		<GRID_WIDTH>THINNER</GRID_WIDTH>
+		<PLOT_DATALABELS_BAR_POSITION>ABOVE</PLOT_DATALABELS_BAR_POSITION>
+		<FOOTNOTE_ALIGNMENT>LEFT</FOOTNOTE_ALIGNMENT>
+		<XAXIS_TICK_LABEL_SKIP_MODE>AUTOMATIC</XAXIS_TICK_LABEL_SKIP_MODE>
+		<Y1AXIS_REFOBJ_VISIBLE>\</Y1AXIS_REFOBJ_VISIBLE>
+		<Y2AXIS_LOGARITHMIC_BASE>BASE_10</Y2AXIS_LOGARITHMIC_BASE>
+		<XAXIS_SCALE_INCREMENT>10.0</XAXIS_SCALE_INCREMENT>
+		<PLOT_DATALABELS_SLICE_TYPE>PERCENT_VALUE</PLOT_DATALABELS_SLICE_TYPE>
+		<Y1AXIS_SCALE_MINIMUM_AUTOMATIC>true</Y1AXIS_SCALE_MINIMUM_AUTOMATIC>
+		<Y2AXIS_SCALE_MINIMUM>10.0</Y2AXIS_SCALE_MINIMUM>
+		<THREED>false</THREED>
+		<PLOT_VGRID>true</PLOT_VGRID>
+		<Y1AXIS_REFOBJ_TEXT>\</Y1AXIS_REFOBJ_TEXT>
+		<Y1AXIS_REFOBJ_WIDTH>\</Y1AXIS_REFOBJ_WIDTH>
+		<Y2AXIS_SCALE_INCREMENT>20.0</Y2AXIS_SCALE_INCREMENT>
+		<PLOT_VGRID_WIDTH>THINNER</PLOT_VGRID_WIDTH>
+		<Y2AXIS_TITLE_ALIGNMENT>CENTER</Y2AXIS_TITLE_ALIGNMENT>
+		<SUBTITLE_ALIGNMENT>LEFT</SUBTITLE_ALIGNMENT>
+		<Y1AXIS_REFOBJ_COLOR>\</Y1AXIS_REFOBJ_COLOR>
+	</CustomValues>
+	<query>
+		<sql><![CDATA[with cpucores as (
+select case when (select value from v$osstat where stat_name='NUM_CPU_CORES') is null then 
+(select value from v$osstat where stat_name='NUM_CPUS')
+else (select value from v$osstat where stat_name='NUM_CPU_CORES') end cpu_cores
+from dual),
+event_class as (
+select /*+ materialize */ distinct wait_class event from v$event_name where wait_class <> 'Idle'
+union all
+select 'CPU + CPU Wait' from dual),
+ash as (
+select /*+ materialize */ ASH.SAMPLE_TIME time_mi, case when ash.session_state = 'ON CPU' then 'CPU + CPU Wait' else wait_class end event 
+from v$active_session_history ash where sample_time > sysdate-20/24/60),
+ash_timi as (
+select dr, row_number() over (partition by dr order by time_mi desc) rn, time_mi, sum(cnt_all) over (partition by dr) cnt_all  from (
+select trunc((dense_RANK() OVER (ORDER BY time_mi desc))/30) dr, time_mi, count(*) cnt_all from ash 
+group by time_mi)),
+ash_all_class_timi as (
+select * from ash_timi, event_class
+),
+ash_cnt_events as (
+select dr, dense_rank() over (partition by dr order by time_mi desc) rn, time_mi, event,  sum(cnt) over (partition by dr, event) cnt from (
+select trunc((dense_RANK() OVER (ORDER BY time_mi desc))/30) dr, time_mi, event, count(*) cnt from ash group by time_mi, event))
+select to_timestamp(to_char(ac.time_mi, 'dd.mm.yyyy hh24:mi:ss'),'dd.mm.yyyy hh24:mi:ss') TIME_MI, ac.event, ceil(nvl(e.cnt,0)/30) cnt_evnts, ceil(ac.cnt_all/30) all_active_session, round((nvl(e.cnt,0)/nvl(ac.cnt_all,1))*100, 2) perc, c.cpu_cores 
+from ash_all_class_timi ac, ash_cnt_events e, cpucores c 
+where  ac.rn=1 and
+ac.time_mi=e.time_mi(+) and ac.event=e.event(+) and ac.dr=e.dr(+) and  ac.rn=e.rn(+)
+order by 1, 5 desc, 2]]></sql>
+	</query>
+		<pdf version="VERSION_1_7" compression="CONTENT">
+			<docproperty title="null" author="null" subject="null" keywords="null" />
+			<cell toppadding="2" bottompadding="2" leftpadding="2" rightpadding="2" horizontalalign="LEFT" verticalalign="TOP" wrap="true" />
+			<column>
+				<heading font="null" size="10" style="NORMAL" color="-16777216" rowshading="-1" labeling="FIRST_PAGE" />
+				<footing font="null" size="10" style="NORMAL" color="-16777216" rowshading="-1" labeling="NONE" />
+				<blob blob="NONE" zip="false" />
+			</column>
+			<table font="null" size="10" style="NORMAL" color="-16777216" userowshading="false" oddrowshading="-1" evenrowshading="-1" showborders="true" spacingbefore="12" spacingafter="12" horizontalalign="LEFT" />
+			<header enable="false" generatedate="false">
+				<data>
+				null																																																																																																																																																																																												
+        </data>
+			</header>
+			<footer enable="false" generatedate="false">
+				<data value="null" />
+			</footer>
+			<security enable="false" useopenpassword="false" openpassword="null" encryption="EXCLUDE_METADATA">
+				<permission enable="false" permissionpassword="null" allowcopying="true" allowprinting="true" allowupdating="false" allowaccessdevices="false" />
+			</security>
+			<pagesetup papersize="LETTER" orientation="1" measurement="in" margintop="1.0" marginbottom="1.0" marginleft="1.0" marginright="1.0" />
+		</pdf>
+	<display id="null" type="" style="Table" enable="true">
+		<name><![CDATA[DETAILS_BY_SQL_ID]]></name>
+		<description><![CDATA[]]></description>
+		<tooltip><![CDATA[]]></tooltip>
+		<drillclass><![CDATA[null]]></drillclass>
+		<CustomValues>
+			<TYPE>horizontal</TYPE>
+		</CustomValues>
+		<query>
+			<sql><![CDATA[with ash_sql as (  
+  SELECT DISTINCT
+         ash.SQL_ID,
+         SUM (DECODE (ash.session_state, 'ON CPU', 1, 0))
+            OVER (PARTITION BY sql_id)
+            CPU,
+           SUM (DECODE (ash.session_state, 'WAITING', 1, 0))
+              OVER (PARTITION BY sql_id)
+         - SUM (
+              DECODE (ash.session_state,
+                      'WAITING', DECODE (ash.wait_class, 'User I/O', 1, 0),
+                      0))
+           OVER (PARTITION BY sql_id)
+            WAIT,
+         SUM (
+            DECODE (ash.session_state,
+                    'WAITING', DECODE (ash.wait_class, 'User I/O', 1, 0),
+                    0))
+         OVER (PARTITION BY sql_id)
+            IO,
+         SUM (DECODE (ash.session_state, 'ON CPU', 1, 1))
+            OVER (PARTITION BY sql_id)
+            TOTAL,
+         MAX (ash.sample_time) OVER (PARTITION BY ash.sql_id) last_executed
+    FROM v$active_session_history ash
+   WHERE SQL_ID IS NOT NULL AND sample_time > nvl(to_date(:TIME_MI, 'yyyy-mm-dd hh24:mi:ss'), SYSDATE) - 1 / (24 * 60)
+)
+select :TIME_MI TIME_MI_LV2, a.*, (select s.sql_text from v$sqlstats s where s.sql_id=a.sql_id) txt from  ash_sql a   
+ORDER BY 6 DESC]]></sql>
+			<binds>
+				<bind id="TIME_MI">
+					<prompt><![CDATA[TIME_MI]]></prompt>
+					<tooltip><![CDATA[TIME_MI]]></tooltip>
+					<value><![CDATA[NULL_VALUE]]></value>
+					<bracket><![CDATA[null]]></bracket>
+				</bind>
+			</binds>
+		</query>
+			<pdf version="VERSION_1_7" compression="CONTENT">
+				<docproperty title="null" author="null" subject="null" keywords="null" />
+				<cell toppadding="2" bottompadding="2" leftpadding="2" rightpadding="2" horizontalalign="LEFT" verticalalign="TOP" wrap="true" />
+				<column>
+					<heading font="null" size="10" style="NORMAL" color="-16777216" rowshading="-1" labeling="FIRST_PAGE" />
+					<footing font="null" size="10" style="NORMAL" color="-16777216" rowshading="-1" labeling="NONE" />
+					<blob blob="NONE" zip="false" />
+				</column>
+				<table font="null" size="10" style="NORMAL" color="-16777216" userowshading="false" oddrowshading="-1" evenrowshading="-1" showborders="true" spacingbefore="12" spacingafter="12" horizontalalign="LEFT" />
+				<header enable="false" generatedate="false">
+					<data>
+					null					</data>
+				</header>
+				<footer enable="false" generatedate="false">
+					<data value="null" />
+				</footer>
+				<security enable="false" useopenpassword="false" openpassword="null" encryption="EXCLUDE_METADATA">
+					<permission enable="false" permissionpassword="null" allowcopying="true" allowprinting="true" allowupdating="false" allowaccessdevices="false" />
+				</security>
+				<pagesetup papersize="LETTER" orientation="1" measurement="in" margintop="1.0" marginbottom="1.0" marginleft="1.0" marginright="1.0" />
+			</pdf>
+--------------------------------------------------------------------------------------------------------------------
+	<display id="null" type="" style="Table" enable="true">
+		<name><![CDATA[STATS_BY_SQL_ID_DUR]]></name>
+		<description><![CDATA[]]></description>
+		<tooltip><![CDATA[]]></tooltip>
+		<drillclass><![CDATA[null]]></drillclass>
+		<CustomValues>
+			<TYPE>horizontal</TYPE>
+		</CustomValues>
+		<query>
+			<sql><![CDATA[with ash_stats as ( 
+select sql_id, sql_plan_hash_value, sql_child_number, sql_exec_id,  min(sample_time) mn_tim, max(sample_time) mx_tim, count(*) dur 
+from v$active_session_history where sql_id = :SQL_ID
+and sample_time > nvl(to_date(:TIME_MI_LV2, 'yyyy-mm-dd hh24:mi:ss'), SYSDATE) - 30 / (24 * 60 * 60)
+and sql_exec_id is not null
+group by sql_id, sql_plan_hash_value, sql_child_number, sql_exec_id
+)
+select :TIME_MI_LV2, a.*, s.parsing_schema_name, 
+round(s.elapsed_time/greatest(s.executions,1)/1000000, 3) sec_per_exec,
+round(s.cpu_time/greatest(s.executions,1)/1000000, 3) cpu_per_exec,
+round(s.disk_reads/greatest(s.executions,1)) rds_per_exec, executions,
+s.sql_profile, s.sql_patch, s.sql_plan_baseline, s.program_id, s.program_line#, s.last_active_time, 
+s.io_interconnect_bytes, s.physical_read_requests, s.physical_read_bytes, s.physical_write_requests, s.physical_write_bytes  
+from ash_stats a, v$sql s
+where  a.sql_id = s.sql_id and a.sql_plan_hash_value=s.plan_hash_value and a.sql_child_number=s.child_number
+order by mx_tim desc]]></sql>
+			<binds>
+				<bind id="TIME_MI_LV2">
+					<prompt><![CDATA[TIME_MI_LV2]]></prompt>
+					<tooltip><![CDATA[TIME_MI_LV2]]></tooltip>
+					<value><![CDATA[NULL_VALUE]]></value>
+					<bracket><![CDATA[null]]></bracket>
+				</bind>
+				<bind id="SQL_ID">
+					<prompt><![CDATA[SQL_ID]]></prompt>
+					<tooltip><![CDATA[SQL_ID]]></tooltip>
+					<value><![CDATA[NULL_VALUE]]></value>
+					<bracket><![CDATA[null]]></bracket>
+				</bind>
+			</binds>
+		</query>
+			<pdf version="VERSION_1_7" compression="CONTENT">
+				<docproperty title="null" author="null" subject="null" keywords="null" />
+				<cell toppadding="2" bottompadding="2" leftpadding="2" rightpadding="2" horizontalalign="LEFT" verticalalign="TOP" wrap="true" />
+				<column>
+					<heading font="null" size="10" style="NORMAL" color="-16777216" rowshading="-1" labeling="FIRST_PAGE" />
+					<footing font="null" size="10" style="NORMAL" color="-16777216" rowshading="-1" labeling="NONE" />
+					<blob blob="NONE" zip="false" />
+				</column>
+				<table font="null" size="10" style="NORMAL" color="-16777216" userowshading="false" oddrowshading="-1" evenrowshading="-1" showborders="true" spacingbefore="12" spacingafter="12" horizontalalign="LEFT" />
+				<header enable="false" generatedate="false">
+					<data>
+					null					</data>
+				</header>
+				<footer enable="false" generatedate="false">
+					<data value="null" />
+				</footer>
+				<security enable="false" useopenpassword="false" openpassword="null" encryption="EXCLUDE_METADATA">
+					<permission enable="false" permissionpassword="null" allowcopying="true" allowprinting="true" allowupdating="false" allowaccessdevices="false" />
+				</security>
+				<pagesetup papersize="LETTER" orientation="1" measurement="in" margintop="1.0" marginbottom="1.0" marginleft="1.0" marginright="1.0" />
+			</pdf>
+	</display>
+--------------------------------------------------------------------------------------------------------------------
+	</display>
+	<display id="null" type="" style="Table" enable="true">
+		<name><![CDATA[DETAILS_BY_PLSQL]]></name>
+		<description><![CDATA[]]></description>
+		<tooltip><![CDATA[]]></tooltip>
+		<drillclass><![CDATA[null]]></drillclass>
+		<CustomValues>
+			<TYPE>horizontal</TYPE>
+		</CustomValues>
+		<query>
+			<sql><![CDATA[with ash_per as (
+select /*+ materialize */ 
+* 
+from v$active_session_history where 
+sample_time > nvl(to_date(:TIME_MI, 'yyyy-mm-dd hh24:mi:ss'), SYSDATE) - 30 / (24 * 60 * 60)
+and plsql_entry_object_id is not null and  plsql_entry_subprogram_id is not null
+),
+ash_proc as ( 
+select p.object_name,
+p.procedure_name, a.* from ash_per a, dba_procedures p
+where   object_id = plsql_entry_object_id 
+and subprogram_id=plsql_entry_subprogram_id
+),
+aggr_ash as (
+select /*+ materialize */ ash.object_name, ash.procedure_name,
+         SUM (DECODE (ash.session_state, 'ON CPU', 1, 0)) CPU,
+           SUM (DECODE (ash.session_state, 'WAITING', 1, 0))
+         - SUM (DECODE (ash.session_state, 'WAITING', DECODE (ash.wait_class, 'User I/O', 1, 0), 0)) WAIT,
+         SUM (DECODE (ash.session_state, 'WAITING', DECODE (ash.wait_class, 'User I/O', 1, 0), 0)) IO,
+         SUM (DECODE (ash.session_state, 'ON CPU', 1, 1))  TOTAL,
+         MAX (ash.sample_time) last_executed         
+from ash_proc ash
+group by ash.object_name, ash.procedure_name
+)
+select :TIME_MI TIME_MI_LV2, a.*,
+round(ratio_to_report(CPU) over()*100, 2) proc_cpu
+--, dbms_lob.substr((select wm_concat(s.nm_query) from report.wd_sqlstore s where instr(upper(s.vl_query), a.procedure_name) > 0), 4000) s 
+from aggr_ash a
+order by 7 desc]]></sql>
+			<binds>
+				<bind id="TIME_MI">
+					<prompt><![CDATA[TIME_MI]]></prompt>
+					<tooltip><![CDATA[TIME_MI]]></tooltip>
+					<value><![CDATA[NULL_VALUE]]></value>
+					<bracket><![CDATA[null]]></bracket>
+				</bind>
+			</binds>
+		</query>
+			<pdf version="VERSION_1_7" compression="CONTENT">
+				<docproperty title="null" author="null" subject="null" keywords="null" />
+				<cell toppadding="2" bottompadding="2" leftpadding="2" rightpadding="2" horizontalalign="LEFT" verticalalign="TOP" wrap="true" />
+				<column>
+					<heading font="null" size="10" style="NORMAL" color="-16777216" rowshading="-1" labeling="FIRST_PAGE" />
+					<footing font="null" size="10" style="NORMAL" color="-16777216" rowshading="-1" labeling="NONE" />
+					<blob blob="NONE" zip="false" />
+				</column>
+				<table font="null" size="10" style="NORMAL" color="-16777216" userowshading="false" oddrowshading="-1" evenrowshading="-1" showborders="true" spacingbefore="12" spacingafter="12" horizontalalign="LEFT" />
+				<header enable="false" generatedate="false">
+					<data>
+					null					</data>
+				</header>
+				<footer enable="false" generatedate="false">
+					<data value="null" />
+				</footer>
+				<security enable="false" useopenpassword="false" openpassword="null" encryption="EXCLUDE_METADATA">
+					<permission enable="false" permissionpassword="null" allowcopying="true" allowprinting="true" allowupdating="false" allowaccessdevices="false" />
+				</security>
+				<pagesetup papersize="LETTER" orientation="1" measurement="in" margintop="1.0" marginbottom="1.0" marginleft="1.0" marginright="1.0" />
+			</pdf>
+--------------------------------------------------------------------------------------------------------------------
+	<display id="null" type="" style="Table" enable="true">
+		<name><![CDATA[DETAILS_BY_SQLID_LV3]]></name>
+		<description><![CDATA[]]></description>
+		<tooltip><![CDATA[]]></tooltip>
+		<drillclass><![CDATA[null]]></drillclass>
+		<CustomValues>
+			<TYPE>horizontal</TYPE>
+		</CustomValues>
+		<query>
+			<sql><![CDATA[with ash_per as (
+select /*+ materialize */ 
+* 
+from v$active_session_history where 
+sample_time >  nvl(to_date(:TIME_MI_LV2, 'yyyy-mm-dd hh24:mi:ss'), SYSDATE) - 30 / (24 * 60 * 60)
+and plsql_entry_object_id is not null and  plsql_entry_subprogram_id is not null
+),
+ash_proc as ( 
+select p.object_name,
+p.procedure_name, a.* from ash_per a, dba_procedures p
+where   object_id = plsql_entry_object_id 
+and subprogram_id=plsql_entry_subprogram_id
+),
+aggr_ash as (
+select /*+ materialize */  
+ash.sql_id,
+         SUM (DECODE (ash.session_state, 'ON CPU', 1, 0)) CPU,
+           SUM (DECODE (ash.session_state, 'WAITING', 1, 0))
+         - SUM (DECODE (ash.session_state, 'WAITING', DECODE (ash.wait_class, 'User I/O', 1, 0), 0)) WAIT,
+         SUM (DECODE (ash.session_state, 'WAITING', DECODE (ash.wait_class, 'User I/O', 1, 0), 0)) IO,
+         SUM (DECODE (ash.session_state, 'ON CPU', 1, 1))  TOTAL,
+         MAX (ash.sample_time) last_executed             
+from ash_proc ash
+where ash.object_name = :OBJECT_NAME and (ash.procedure_name = :PROCEDURE_NAME or ash.procedure_name is null)
+group by ash.sql_id
+)
+select :TIME_MI_LV2, ash.*, round(ratio_to_report(CPU) over()*100, 2) proc_cpu, 
+(select sql_text from v$sqlstats where sql_id=ash.sql_id and rownum < 2) sql_text 
+from  aggr_ash ash  
+order by 6 desc]]></sql>
+			<binds>
+				<bind id="TIME_MI_LV2">
+					<prompt><![CDATA[TIME_MI_LV2]]></prompt>
+					<tooltip><![CDATA[TIME_MI_LV2]]></tooltip>
+					<value><![CDATA[NULL_VALUE]]></value>
+					<bracket><![CDATA[null]]></bracket>
+				</bind>
+				<bind id="OBJECT_NAME">
+					<prompt><![CDATA[TIME_MI]]></prompt>
+					<tooltip><![CDATA[TIME_MI]]></tooltip>
+					<value><![CDATA[NULL_VALUE]]></value>
+					<bracket><![CDATA[null]]></bracket>
+				</bind>
+				<bind id="PROCEDURE_NAME">
+					<prompt><![CDATA[TIME_MI]]></prompt>
+					<tooltip><![CDATA[TIME_MI]]></tooltip>
+					<value><![CDATA[NULL_VALUE]]></value>
+					<bracket><![CDATA[null]]></bracket>
+				</bind>        
+			</binds>
+		</query>
+			<pdf version="VERSION_1_7" compression="CONTENT">
+				<docproperty title="null" author="null" subject="null" keywords="null" />
+				<cell toppadding="2" bottompadding="2" leftpadding="2" rightpadding="2" horizontalalign="LEFT" verticalalign="TOP" wrap="true" />
+				<column>
+					<heading font="null" size="10" style="NORMAL" color="-16777216" rowshading="-1" labeling="FIRST_PAGE" />
+					<footing font="null" size="10" style="NORMAL" color="-16777216" rowshading="-1" labeling="NONE" />
+					<blob blob="NONE" zip="false" />
+				</column>
+				<table font="null" size="10" style="NORMAL" color="-16777216" userowshading="false" oddrowshading="-1" evenrowshading="-1" showborders="true" spacingbefore="12" spacingafter="12" horizontalalign="LEFT" />
+				<header enable="false" generatedate="false">
+					<data>
+					null					</data>
+				</header>
+				<footer enable="false" generatedate="false">
+					<data value="null" />
+				</footer>
+				<security enable="false" useopenpassword="false" openpassword="null" encryption="EXCLUDE_METADATA">
+					<permission enable="false" permissionpassword="null" allowcopying="true" allowprinting="true" allowupdating="false" allowaccessdevices="false" />
+				</security>
+				<pagesetup papersize="LETTER" orientation="1" measurement="in" margintop="1.0" marginbottom="1.0" marginleft="1.0" marginright="1.0" />
+			</pdf>
+	</display>
+--------------------------------------------------------------------------------------------------------------------
+	</display>
+</display>
+</displays>

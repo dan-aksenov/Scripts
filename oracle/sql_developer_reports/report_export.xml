@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<displays>
+<display id="69b24203-0148-1000-8003-c0a89bf16161" type="" style="Table" enable="true">
+	<name><![CDATA[TOP SQL CHART]]></name>
+	<description><![CDATA[]]></description>
+	<tooltip><![CDATA[]]></tooltip>
+	<drillclass><![CDATA[null]]></drillclass>
+	<CustomValues>
+		<TYPE>horizontal</TYPE>
+	</CustomValues>
+	<query>
+		<sql><![CDATA[select b.*, TO_CHAR (SUBSTR (t.sql_text, 1, 4000)) sql, :X cur_range, :C child_range from (
+select a.*, row_number() over (order by a.ms_per_exec desc) rn from (
+SELECT s.sql_id,  s.snap_id, sn.end_interval_time,
+                                 SUM (s.elapsed_time_delta) elapsed_time,
+                                 SUM (s.executions_delta) executions,
+                                 round(SUM (s.elapsed_time_delta)/(case when SUM (s.executions_delta) = 0 then 1 else  SUM (s.executions_delta) end)/1000, 2) ms_per_exec,
+                                 MAX (s.module) module
+                          FROM   dba_hist_sqlstat s, dba_hist_snapshot sn
+                         WHERE s.snap_id=sn.snap_id and s.module like 'JDBC%'
+                         and sn.snap_id = (select max(snap_id)-:X from dba_hist_snapshot)
+  GROUP BY  s.sql_id,  s.snap_id, sn.end_interval_time
+) a
+) b, dba_hist_sqltext t  
+where b.sql_id=t.sql_id and rn <=5     
+order by rn]]></sql>
+		<binds>
+			<bind id="X">
+				<prompt><![CDATA[X]]></prompt>
+				<tooltip><![CDATA[X]]></tooltip>
+				<value><![CDATA[0]]></value>
+				<bracket><![CDATA[null]]></bracket>
+			</bind>
+			<bind id="C">
+				<prompt><![CDATA[C]]></prompt>
+				<tooltip><![CDATA[C]]></tooltip>
+				<value><![CDATA[10]]></value>
+				<bracket><![CDATA[null]]></bracket>
+			</bind>
+		</binds>
+	</query>
+		<pdf version="VERSION_1_7" compression="CONTENT">
+			<docproperty title="null" author="null" subject="null" keywords="null" />
+			<cell toppadding="2" bottompadding="2" leftpadding="2" rightpadding="2" horizontalalign="LEFT" verticalalign="TOP" wrap="true" />
+			<column>
+				<heading font="null" size="10" style="NORMAL" color="-16777216" rowshading="-1" labeling="FIRST_PAGE" />
+				<footing font="null" size="10" style="NORMAL" color="-16777216" rowshading="-1" labeling="NONE" />
+				<blob blob="NONE" zip="false" />
+			</column>
+			<table font="null" size="10" style="NORMAL" color="-16777216" userowshading="false" oddrowshading="-1" evenrowshading="-1" showborders="true" spacingbefore="12" spacingafter="12" horizontalalign="LEFT" />
+			<header enable="false" generatedate="false">
+				<data>
+				
+				null								</data>
+			</header>
+			<footer enable="false" generatedate="false">
+				<data value="null" />
+			</footer>
+			<security enable="false" useopenpassword="false" openpassword="null" encryption="EXCLUDE_METADATA">
+				<permission enable="false" permissionpassword="null" allowcopying="true" allowprinting="true" allowupdating="false" allowaccessdevices="false" />
+			</security>
+			<pagesetup papersize="LETTER" orientation="1" measurement="in" margintop="1.0" marginbottom="1.0" marginleft="1.0" marginright="1.0" />
+		</pdf>
+	<display id="null" type="" style="Chart" enable="true">
+		<name><![CDATA[Graph]]></name>
+		<description><![CDATA[]]></description>
+		<tooltip><![CDATA[]]></tooltip>
+		<drillclass><![CDATA[null]]></drillclass>
+		<CustomValues>
+			<XAXIS_TITLE_TEXT>DATE</XAXIS_TITLE_TEXT>
+			<LEGEND_LOCATION>AUTOMATIC</LEGEND_LOCATION>
+			<DATA_MAP_SERIES>\,"SQL_ID"</DATA_MAP_SERIES>
+			<PLOT_HGRID_WIDTH>THINNER</PLOT_HGRID_WIDTH>
+			<Y2AXIS_SCALE_MAXIMUM>80.0</Y2AXIS_SCALE_MAXIMUM>
+			<Y1AXIS_TITLE_TEXT>mSec PER EXECUTE</Y1AXIS_TITLE_TEXT>
+			<PLOT_DATALABELS_SLICE_POSITION>OUTSIDE_SLICE</PLOT_DATALABELS_SLICE_POSITION>
+			<Y2AXIS_LOGARITHMIC_BASE>BASE_10</Y2AXIS_LOGARITHMIC_BASE>
+			<Y1AXIS_SCALE_INCREMENT>10.0</Y1AXIS_SCALE_INCREMENT>
+			<Y2AXIS_TITLE_ALIGNMENT>CENTER</Y2AXIS_TITLE_ALIGNMENT>
+			<XAXIS_LOGARITHMIC_BASE>BASE_10</XAXIS_LOGARITHMIC_BASE>
+			<Y2AXIS_SCALE_MINIMUM>10.0</Y2AXIS_SCALE_MINIMUM>
+			<DATA_MAP_COLNAMES>\,"END_INTERVAL_TIME","EXECUTIONS","MS_PER_EXEC","SQL_ID"</DATA_MAP_COLNAMES>
+			<SUBTITLE_ALIGNMENT>LEFT</SUBTITLE_ALIGNMENT>
+			<TITLE_ALIGNMENT>LEFT</TITLE_ALIGNMENT>
+			<Y1AXIS_LINE_WIDTH>THINNEST</Y1AXIS_LINE_WIDTH>
+			<GRID_WIDTH>THINNER</GRID_WIDTH>
+			<Y1AXIS_TITLE>true</Y1AXIS_TITLE>
+			<PLOT_DATALABELS_BAR_POSITION>ABOVE</PLOT_DATALABELS_BAR_POSITION>
+			<TYPE>THREED_BAR</TYPE>
+			<LEGEND_ALIGNMENT>LEFT</LEGEND_ALIGNMENT>
+			<XAXIS_TITLE>true</XAXIS_TITLE>
+			<PLOT_DATALABELS_SLICE_TYPE>PERCENT_VALUE</PLOT_DATALABELS_SLICE_TYPE>
+			<DATA_MAP_VALUES>\,"MS_PER_EXEC"</DATA_MAP_VALUES>
+			<DATA_MAP_COUNT>1</DATA_MAP_COUNT>
+			<FOOTNOTE_ALIGNMENT>LEFT</FOOTNOTE_ALIGNMENT>
+			<Y2AXIS_LINE_WIDTH>THINNEST</Y2AXIS_LINE_WIDTH>
+			<XAXIS_SCALE_INCREMENT>10.0</XAXIS_SCALE_INCREMENT>
+			<Y1AXIS_LOGARITHMIC_BASE>BASE_10</Y1AXIS_LOGARITHMIC_BASE>
+			<XAXIS_TICK_LABEL_ROTATE>HORIZONTAL</XAXIS_TICK_LABEL_ROTATE>
+			<Y1AXIS_TICK_LABEL_ROTATE>HORIZONTAL</Y1AXIS_TICK_LABEL_ROTATE>
+			<PLOT_RGRID_WIDTH>THINNER</PLOT_RGRID_WIDTH>
+			<XAXIS_SCALE_MAXIMUM>70.0</XAXIS_SCALE_MAXIMUM>
+			<STYLE>Default</STYLE>
+			<XAXIS_TICK_LABEL_SKIP_COUNT>1</XAXIS_TICK_LABEL_SKIP_COUNT>
+			<XAXIS_TICK_LABEL_SKIP_FIRST>0</XAXIS_TICK_LABEL_SKIP_FIRST>
+			<XAXIS_TICK_LABEL_SKIP_MODE>MANUAL</XAXIS_TICK_LABEL_SKIP_MODE>
+			<Y1AXIS_TITLE_ALIGNMENT>CENTER</Y1AXIS_TITLE_ALIGNMENT>
+			<PLOT_VGRID_WIDTH>THINNER</PLOT_VGRID_WIDTH>
+			<Y2AXIS_SCALE_INCREMENT>20.0</Y2AXIS_SCALE_INCREMENT>
+			<Y1AXIS_SCALE_MAXIMUM>60.0</Y1AXIS_SCALE_MAXIMUM>
+			<Y2AXIS_TICK_LABEL_ROTATE>HORIZONTAL</Y2AXIS_TICK_LABEL_ROTATE>
+			<XAXIS_TITLE_ALIGNMENT>CENTER</XAXIS_TITLE_ALIGNMENT>
+			<XAXIS_LINE_WIDTH>THINNEST</XAXIS_LINE_WIDTH>
+			<DATA_MAP_COLUMNS>\,"END_INTERVAL_TIME"</DATA_MAP_COLUMNS>
+		</CustomValues>
+		<query>
+			<sql><![CDATA[with sql_id_array as (
+select /*+ materialize */ b.sql_id from (
+select a.*, row_number() over (order by a.ms_per_exec desc) rn from (
+SELECT s.sql_id, 
+round(SUM (s.elapsed_time_delta)/(case when SUM (s.executions_delta) = 0 then 1 else  SUM (s.executions_delta) end)/1000, 2) ms_per_exec
+                          FROM dba_hist_sqlstat s, dba_hist_snapshot sn
+                         WHERE s.snap_id=sn.snap_id and s.module = :MODULE
+                         and sn.snap_id = :SNAP_ID
+  GROUP BY  s.sql_id,  s.snap_id, sn.end_interval_time
+) a
+) b  
+where rn <=5     
+)
+select --* 
+sql_id, end_interval_time, ms_per_exec, executions 
+from (                      
+    SELECT     s.sql_id, s.snap_id, sn.end_interval_time, SUM (s.elapsed_time_delta) elapsed_time, SUM (s.cpu_time_delta) cpu_time, SUM (s.executions_delta) executions,
+                                 round(SUM (s.elapsed_time_delta)/(case when SUM (s.executions_delta) = 0 then 1 else  SUM (s.executions_delta) end)/1000, 2) ms_per_exec
+                          FROM   dba_hist_sqlstat s, dba_hist_snapshot sn                          
+                         WHERE  s.snap_id=sn.snap_id and 
+                         s.snap_id >= :SNAP_ID-:CHILD_RANGE AND s.snap_id <= :SNAP_ID 
+                         and sql_id in (select * from sql_id_array)
+                      GROUP BY   s.sql_id,s.snap_id, sn.end_interval_time
+)
+order by end_interval_time]]></sql>
+			<binds>
+				<bind id="MODULE">
+					<prompt><![CDATA[MODULE]]></prompt>
+					<tooltip><![CDATA[MODULE]]></tooltip>
+					<value><![CDATA[NULL_VALUE]]></value>
+					<bracket><![CDATA[null]]></bracket>
+				</bind>
+				<bind id="SNAP_ID">
+					<prompt><![CDATA[SNAP_ID]]></prompt>
+					<tooltip><![CDATA[SNAP_ID]]></tooltip>
+					<value><![CDATA[NULL_VALUE]]></value>
+					<bracket><![CDATA[null]]></bracket>
+				</bind>
+				<bind id="CHILD_RANGE">
+					<prompt><![CDATA[CHILD_RANGE]]></prompt>
+					<tooltip><![CDATA[CHILD_RANGE]]></tooltip>
+					<value><![CDATA[NULL_VALUE]]></value>
+					<bracket><![CDATA[null]]></bracket>
+				</bind>
+			</binds>
+		</query>
+			<pdf version="VERSION_1_7" compression="CONTENT">
+				<docproperty title="" author="" subject="" keywords="" />
+				<cell toppadding="2" bottompadding="2" leftpadding="2" rightpadding="2" horizontalalign="LEFT" verticalalign="TOP" wrap="true" />
+				<column>
+					<heading font="null" size="10" style="NORMAL" color="-16777216" rowshading="-1" labeling="FIRST_PAGE" />
+					<footing font="null" size="10" style="NORMAL" color="-16777216" rowshading="-1" labeling="NONE" />
+					<blob blob="NONE" zip="false" />
+				</column>
+				<table font="null" size="10" style="NORMAL" color="-16777216" userowshading="false" oddrowshading="-1" evenrowshading="-1" showborders="true" spacingbefore="12" spacingafter="12" horizontalalign="LEFT" />
+				<header enable="false" generatedate="false">
+					<data>
+					
+					null										</data>
+				</header>
+				<footer enable="false" generatedate="false">
+					<data value="null" />
+				</footer>
+				<security enable="false" useopenpassword="false" openpassword="null" encryption="EXCLUDE_METADATA">
+					<permission enable="false" permissionpassword="null" allowcopying="true" allowprinting="true" allowupdating="false" allowaccessdevices="false" />
+				</security>
+				<pagesetup papersize="LETTER" orientation="1" measurement="in" margintop="1.0" marginbottom="1.0" marginleft="1.0" marginright="1.0" />
+			</pdf>
+	</display>
+</display>
+</displays>
