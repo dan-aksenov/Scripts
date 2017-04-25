@@ -1,3 +1,4 @@
+rem REDO THIS IN PS. like DOCS.
 chcp 1251
 set log=d:\tmp
 IF NOT EXIST %log% MD %log%
