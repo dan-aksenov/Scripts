@@ -1,19 +1,21 @@
 #!/bin/python
-import sys, getopt, psycopg2, os
+import sys, getopt, psycopg2, os, datetime
 from subprocess import call
 
 # variables to be redone for python
-PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/pgsql-9.4/bin"
-PGHOME=/var/lib/pgsql/9.4
+#PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/pgsql-9.4/bin"
+#PGHOME=/var/lib/pgsql/9.4
 #PGDATA=$HOME/data # Not used for now //dbax
-PGARCH=$PGHOME/backup/arch
-PG_BASEBACKUP=$(which pg_basebackup)
-PG_ARCHIVECLEANUP=$(which pg_archivecleanup)
+#PGARCH=$PGHOME/backup/arch
+#PG_BASEBACKUP=$(which pg_basebackup)
+#PG_ARCHIVECLEANUP=$(which pg_archivecleanup)
 
 backup_label = str(datetime.date.today())
+pid = str(os.getpid())
+pidfile = "/tmp/basebackup.pid"
 
-AGE="-mtime +3"
-LOCK="/tmp/basebackup.lock"
+#AGE="-mtime +3"
+#LOCK="/tmp/basebackup.lock"
 # /variables
 
 def usage(): 
@@ -40,10 +42,15 @@ if not os.path.isdir(backupdir):
     print "No valid directory supplied :("
     usage()
 
-# todo: check if lock file exists
-# todo: create lock file and backup directory
+if os.path.isfile(pidfile):
+    print "Another backup (pid %s) already running, exiting" % pid
+    sys.exit()
+file(pidfile, 'w').write(pid)
 
-basebackup_params = "-F t -P -v -x -z" # will not work!
-call([ "pg_basebackup", "-l", backup_label, "-U", "postgres", "-D", backupdir, basebackup_params ] )
+call([ "pg_basebackup", "-l", backup_label, "-U", "postgres", "-D", backupdir, "-F", "t", "-P", "-v", "-x", "-z"] )
 
-# todo remove old backups and archivelogs
+# todo: remove old backups and archivelogs
+
+# remove pidfile
+os.unlink(pidfile)   
+
