@@ -13,8 +13,7 @@ from subprocess import call
 backup_label = str(datetime.date.today())
 pid = str(os.getpid())
 pidfile = "/tmp/basebackup.pid"
-
-#AGE="-mtime +3"
+age=3
 # /variables
 
 def usage(): 
@@ -46,13 +45,15 @@ if os.path.isfile(pidfile):
     sys.exit()
 file(pidfile, 'w').write(pid)
 
+# todl: rewrite this with call('ls -l', shell=True)
 call([ "pg_basebackup", "-l", backup_label, "-U", "postgres", "-D", backupdir, "-F", "t", "-P", "-v", "-x", "-z"] )
 
 # todo: remove old backups and archivelogs.
 # not working as expected. revision needed
-for file in os.listdir(backupdir):
+for f in os.listdir(backupdir):
+    file = os.path.join(backupdir, f)
     creation_time = os.path.getctime(file)
-    if (current_time - creation_time) // (24 * 3600) >= 7:
+    if (current_time - creation_time) // (24 * 3600) >= age:
         os.unlink(file)
         print('{} removed'.format(file))
 
