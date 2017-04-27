@@ -15,7 +15,6 @@ pid = str(os.getpid())
 pidfile = "/tmp/basebackup.pid"
 
 #AGE="-mtime +3"
-#LOCK="/tmp/basebackup.lock"
 # /variables
 
 def usage(): 
@@ -49,7 +48,13 @@ file(pidfile, 'w').write(pid)
 
 call([ "pg_basebackup", "-l", backup_label, "-U", "postgres", "-D", backupdir, "-F", "t", "-P", "-v", "-x", "-z"] )
 
-# todo: remove old backups and archivelogs
+# todo: remove old backups and archivelogs.
+# not working as expected. revision needed
+for file in os.listdir(backupdir):
+    creation_time = os.path.getctime(file)
+    if (current_time - creation_time) // (24 * 3600) >= 7:
+        os.unlink(file)
+        print('{} removed'.format(file))
 
 # remove pidfile
 os.unlink(pidfile)   
