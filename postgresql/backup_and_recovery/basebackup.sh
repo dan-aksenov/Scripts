@@ -9,7 +9,7 @@
 PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/pgsql-9.4/bin"
 PGHOME=/var/lib/pgsql/9.4
 #PGDATA=$HOME/data # Not used for now //dbax
-PGARCH=$PGHOME/backup/arch
+PGARCH=$(psql -c "show archive_command" | grep cp | cut -f4 -d" " | cut -f1 -d%)
 PG_BASEBACKUP=$(which pg_basebackup)
 PG_ARCHIVECLEANUP=$(which pg_archivecleanup)
 CURRENT="db-$(date +%m-%d-%Y_%H)"
@@ -55,7 +55,7 @@ chmod 700 $BACKUPDIR/$CURRENT
 
 # remove old backups
 # because archive may be somewhere else instead of $PGDATA/archive new variable PGARCH was implemented //dbax
-/usr/bin/find $BACKUPDIR -maxdepth 1 -type d $AGE -name "db-*" |xargs rm -rf
+/usr/bin/find $BACKUPDIR -maxdepth 1 -type d $AGE -name "db-*" | xargs rm -rf
 for backup_label in $(find $PGARCH/*.backup $AGE -exec basename {} \;)
   do
     $PG_ARCHIVECLEANUP $PGARCH $backup_label -d
