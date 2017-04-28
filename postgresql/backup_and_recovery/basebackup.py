@@ -1,6 +1,8 @@
 #!/bin/python
 import sys, getopt, psycopg2, os, datetime, time
 from subprocess import call
+from shutil import rmtree
+from glob import glob
 
 # variables to be redone for python
 #PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/pgsql-9.4/bin"
@@ -10,6 +12,7 @@ from subprocess import call
 #PG_BASEBACKUP=$(which pg_basebackup)
 #PG_ARCHIVECLEANUP=$(which pg_archivecleanup)
 
+arch_dir = "/var/lib/pgsql/9.4/data/arch/"
 backup_label = str(datetime.date.today())
 pid = str(os.getpid())
 pidfile = "/tmp/basebackup.pid"
@@ -42,13 +45,13 @@ if not os.path.isdir(backup_dir):
     print "No valid directory supplied :("
     usage()
 
-# Check if another backpu is already running.
+# Check if another backup is already running.
 if os.path.isfile(pidfile):
     print "Another backup (pid %s) already running, exiting" % pid
     sys.exit()
 file(pidfile, 'w').write(pid)
 
-# Create labeled directory to hold timestamped backup
+# Create labeled directory to hold timestamped backup.
 final_dir = backup_dir + '/' + backup_label
 if not os.path.exists(final_dir):
     os.makedirs(final_dir)
@@ -58,14 +61,24 @@ backup_command = "pg_basebackup -l" + backup_label + " -U postgres -D" + final_d
 call(backup_command, shell=True)
 
 # todo: remove old backups and archivelogs.
-# not working as expected. revision needed
 current_time = time.time()
 for f in os.listdir(backup_dir):
     file = os.path.join(backup_dir, f)
     creation_time = os.path.getctime(file)
     if (current_time - creation_time) // (24 * 3600) >= age:
-        os.unlink(file)
+        rmtree(file)
         print('{} removed'.format(file))
+
+# Delete old archivelogs
+for file in os.listdir(arch_dir):
+    if file.endswith(".backup"):    
+        arch_file = os.path.join(arch_dir, file)
+        creation_time = os.path.getctime(arch_file)
+        if (current_time - creation_time) // (24 * 3600) >= age:
+            cleanup_command = "pg_archivecleanup" + arch_dir + " " + file + " -d"
+            call(cleanup_command, shell=True )
+            os.unlink(arch_file)
+            print('{} removed'.format(file))
 
 # remove pidfile
 os.unlink(pidfile)   
