@@ -2,14 +2,14 @@ rem REDO THIS IN PS. like DOCS.
 chcp 1251
 
 rem logging directory
-set log_dir=F:\TMP
+set log_dir=E:\TMP
 IF NOT EXIST %log_dir% MD %log_dir%
 
 rem set source
-set src="f:\Users\danila\Pictures\Мои фотографии"
+set src="E:\Users\danila\Pictures\Мои фотографии"
 
 rem set YandexDisk destination
-set dst="f:\Users\danila\YandexDisk\!BUPS\fotos\Мои фотографии"
+set dst="F:\Users\danila\YandexDisk\!BUPS\fotos\Мои фотографии"
 set log=/unilog:"%log_dir%\photo_to_Ya.log"
 
 robocopy %src% %dst% *.* %log% /tee /z /mir /mt
