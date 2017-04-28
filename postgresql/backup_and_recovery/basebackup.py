@@ -4,30 +4,30 @@ from subprocess import call
 from shutil import rmtree
 from glob import glob
 
-# variables to be redone for python
-#PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/pgsql-9.4/bin"
-#PGHOME=/var/lib/pgsql/9.4
-#PG_BASEBACKUP=$(which pg_basebackup)
-#PG_ARCHIVECLEANUP=$(which pg_archivecleanup)
+# Backup timestamp label:
+backup_label = str(datetime.date.today())
 
-# make arch dir dynamic
-arch_dir = "/var/lib/pgsql/9.4/data/arch/"
+# Lockfile settings:
+pid = str(os.getpid())
+pidfile = "/tmp/basebackup.pid"
 
-# Get archivelog dir not working yet
-import psycopg2
+# Retention setting for old backup and archivelogs:
+age = 1
 
+# Get archivelog directory from current postgresql settings.
 try:
     conn = psycopg2.connect("dbname='postgres' user='postgres' host='localhost'")
 except:
     print "ERROR: unable to connect to the database!"
 cur = conn.cursor()
 cur.execute("show archive_command")
-#arch_dir = cur.fetchall()
-
-backup_label = str(datetime.date.today())
-pid = str(os.getpid())
-pidfile = "/tmp/basebackup.pid"
-age=1
+arch_dir = cur.fetchall()
+# convert tuple to string
+arch_dir = ''.join(arch_dir)
+# split to remove trash
+arch_dir = arch_dir.split(' ')
+# finalize variable
+arch_dir = arch_dir[2]
 
 # Function to display command usage.
 def usage(): 
@@ -59,7 +59,7 @@ if not os.path.isdir(backup_dir):
 # Check if another backup is already running.
 if os.path.isfile(pidfile):
     print "Another backup (pid %s) already running, exiting" % pid
-    sys.exit()
+    sys.exit(2)
 file(pidfile, 'w').write(pid)
 
 # Create labeled directory to hold timestamped backup.
@@ -70,7 +70,11 @@ if not os.path.exists(final_dir):
 print "Creating postgresql cluster backup:"
 # Create backup command string using label, directory and required parameters and run it.
 backup_command = "pg_basebackup -l" + backup_label + " -U postgres -D" + final_dir + " -F t -P -v -x -z"
-call(backup_command, shell=True)
+try:
+    call(backup_command, shell=True)
+except:
+    print "Backup failed"
+    sys.exit(2)
 
 print "Deleting old backups according to retention policy:"
 current_time = time.time()
