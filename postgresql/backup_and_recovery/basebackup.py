@@ -23,11 +23,13 @@ cur = conn.cursor()
 cur.execute("show archive_command")
 arch_dir = cur.fetchall()
 # convert tuple to string
-arch_dir = ''.join(arch_dir)
-# split to remove trash
+for a in arch_dir:
+    arch_dir = ''.join(a)
+# split to remove trash. needs to be rewritten!
 arch_dir = arch_dir.split(' ')
-# finalize variable
 arch_dir = arch_dir[2]
+arch_dir = arch_dir.split('%')
+arch_dir = arch_dir[0]
 
 # Function to display command usage.
 def usage(): 
