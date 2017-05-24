@@ -128,3 +128,19 @@ SELECT    'CREATE INDEX &3..'
                AND i.table_name <> 'HEARTBEAT'
                AND i.owner = c.index_owner)
  WHERE cnt = column_position AND TABLE_NAME NOT LIKE 'SYS_FBA%';
+ 
+-- added 21.12.2015 indexes by visibility
+PROMPT --INDEXES BY VISIBILITY
+ 
+select 'ALTER INDEX &3..'||index_name||' VISIBLE;' from (
+SELECT table_name, index_name, status, visibility
+          FROM dba_indexes@&4
+         WHERE     owner = '&3'
+               AND table_name NOT LIKE '%$%'
+               AND index_type <> 'LOB'
+               AND table_name <> 'HEARTBEAT'
+               AND TABLE_NAME NOT LIKE 'SYS_FBA%'
+        MINUS
+        SELECT table_name, index_name, status, visibility
+          FROM dba_indexes@&2
+         WHERE owner = '&1' AND TABLE_NAME NOT LIKE 'SYS_FBA%'); 
