@@ -43,4 +43,4 @@ comp-lzo
 verb 3
 EOF
 
-echo "$username 's openvpn config" | mail -s "Subject Here" -a $username.ovpn $mailto
+echo "In attachment" | mail -s "Susername 's openvpn config" -a $username.ovpn $mailto
