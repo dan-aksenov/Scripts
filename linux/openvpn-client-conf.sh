@@ -2,6 +2,8 @@
 # 1 - username, 2 - mailto
 if [ $# -lt 2 ]; then
    echo Usage: 1 - vpn username, 2 - address to send config file
+   exit 1
+fi
 username=$1
 mailto=$2
 easyrsa_location=/opt/easy-rsa-master/easyrsa3
