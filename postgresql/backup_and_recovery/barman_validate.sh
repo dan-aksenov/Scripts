@@ -1,3 +1,4 @@
+# This script requires barman to have sudo privileges.
 # Database to recover
 pg=$1
 # Postgresql server version
