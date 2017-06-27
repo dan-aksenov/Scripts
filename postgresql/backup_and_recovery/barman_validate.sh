@@ -17,13 +17,13 @@ sudo -u postgres test -d $dir && sudo -u postgres rm -rf $dir && sudo -u postgre
 barman recover $pg latest $dir --remote-ssh-command "ssh postgres@pg-barman"
 
 # Create simple postgresql.conf.
-# and local timezone for correct logging
 cat > /tmp/postgresql.conf <<EOF
 # Some high number port to avoid confilicts with existing installations
 port=54320
+# Local timezone for correct logging
 log_timezone = 'W-SU'
 timezone = 'W-SU'
-# because of "PANIC:  too many replication slots active before shutdown" add some slots to avoid
+# Because of "PANIC:  too many replication slots active before shutdown" add some slots to avoid
 max_replication_slots=10
 EOF
 sudo -u postgres cp /tmp/postgresql.conf $dir
