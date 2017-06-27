@@ -16,9 +16,10 @@ sudo -u postgres test -d $dir && sudo -u postgres rm -rf $dir && sudo -u postgre
 # Restore from latest barman backup
 barman recover $pg latest $dir --remote-ssh-command "ssh postgres@pg-barman"
 
-# Create simple postgresql.conf. Some high number port to avoid confilicts
+# Create simple postgresql.conf.
 # and local timezone for correct logging
 cat > /tmp/postgresql.conf <<EOF
+# Some high number port to avoid confilicts with existing installations
 port=54320
 log_timezone = 'W-SU'
 timezone = 'W-SU'
