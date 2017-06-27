@@ -29,7 +29,7 @@ EOF
 sudo -u postgres cp /tmp/postgresql.conf $dir
 
 # Find .partial wal file for complete recovery
-# See http://docs.pgbarman.org/release/1.6.1/limitations-of-partial-wal-files-with-recovery for more info.
+# See http://docs.pgbarman.org/release/1.6.1/ limitations-of-partial-wal-files-with-recovery for more info.
 xlog=$(find $pg/streaming/ -name '*.partial' -exec basename {} \; | cut -d "." -f 1)
 sudo find $pg/streaming/ -type f -name '*.partial' -exec cp {} $dir/pg_xlog/$xlog \;
 sudo chown postgres.postgres $dir/pg_xlog/$xlog
