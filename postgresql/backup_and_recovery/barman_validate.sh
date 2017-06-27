@@ -11,7 +11,7 @@ dir=/var/lib/pgsql/$ver/stage
 send_to=aksenov_d@tii.ru
 
 # Remove and recreate sandbox directory if exists
-sudo -u postgres test -d $dir && sudo -u postgres rm -rf $dir && sudo -u postgres mkdir $dir
+sudo -u postgres test -d $dir && sudo -u postgres rm -rf $dir && sudo -u postgres mkdir $dir -p
 
 # Restore from latest barman backup
 barman recover $pg latest $dir --remote-ssh-command "ssh postgres@pg-barman"
