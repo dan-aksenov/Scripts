@@ -22,6 +22,8 @@ cat > /tmp/postgresql.conf <<EOF
 port=54320
 log_timezone = 'W-SU'
 timezone = 'W-SU'
+# because of "PANIC:  too many replication slots active before shutdown" add some slots to avoid
+max_replication_slots=10
 EOF
 sudo -u postgres cp /tmp/postgresql.conf $dir
 
