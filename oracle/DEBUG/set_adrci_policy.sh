@@ -5,7 +5,7 @@ show homes
 spool off
 exit
 EOF
-for home in $(tail -n+2 adr_homes.lst); do
+for home in $(tail -n+2 /tmp/adr_homes.lst); do
 	adrci <<EOF
 	set home $home
 	SET CONTROL (shortp_policy =100)
