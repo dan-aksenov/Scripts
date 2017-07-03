@@ -15,4 +15,4 @@ for home in $(tail -n+2 /tmp/adr_homes.lst); do
 	exit
 EOF
 done
-rm /temp/adr_homes.lst
+rm /tmp/adr_homes.lst
