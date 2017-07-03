@@ -1,11 +1,11 @@
 #!/bin/bash
 adrci << EOF
-spool adr_homes.lst
+spool /tmp/adr_homes.lst
 show homes
 spool off
 exit
 EOF
-for home in $(tail -n+2 adr_homes.lst); do
+for home in $(tail -n+2 /tmp/adr_homes.lst); do
 	adrci <<EOF
 	set home $home
 	PURGE -AGE 000
@@ -15,4 +15,4 @@ for home in $(tail -n+2 adr_homes.lst); do
 	exit
 EOF
 done
-rm adr_homes.lst
+rm /temp/adr_homes.lst
