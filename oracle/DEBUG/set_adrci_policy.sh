@@ -1,6 +1,6 @@
 #!/bin/bash
 adrci << EOF
-spool adr_homes.lst
+spool /tmp/adr_homes.lst
 show homes
 spool off
 exit
@@ -14,4 +14,4 @@ for home in $(tail -n+2 adr_homes.lst); do
 	exit
 EOF
 done
-rm adr_homes.lst
+rm /tmp/adr_homes.lst
