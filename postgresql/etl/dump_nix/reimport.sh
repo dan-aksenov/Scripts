@@ -31,5 +31,5 @@ EOF
 pg_dump -h "$src_host" --blobs $src_db | psql $dst_db &>/tmp/restore.log
 
 # postsrcipt
-psql -c "UPDATE pg_language set lanpltrusted = true where lanname='pltclu'" $dst_db
-psql -c "UPDATE pg_language set lanpltrusted = true where lanname='plpythonu'" $dst_db
+# psql -c "UPDATE pg_language set lanpltrusted = true where lanname='pltclu'" $dst_db
+# psql -c "UPDATE pg_language set lanpltrusted = true where lanname='plpythonu'" $dst_db
