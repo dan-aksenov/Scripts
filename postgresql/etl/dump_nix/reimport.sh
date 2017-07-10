@@ -6,7 +6,7 @@ display_usage() {
 dst_db=$1
 owner=$2
 src_db=$3
-scr_host=$4
+src_host=$4
 
 # if less than 3 variables supplied
 if [  $# -lt 3 ]
