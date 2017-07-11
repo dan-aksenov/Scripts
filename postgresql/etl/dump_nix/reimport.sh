@@ -24,11 +24,11 @@ create database $dst_db with owner $owner;
 EOF
 
 # Reimport database from source.
-if [ !$scr_host ]
+if [ -z $src_host ]
 then
     pg_dump $src_db | psql $dst_db &>/tmp/reimport.log
 else
-    ssh $src_host "pg_dump $src_db" | psql dbname &>/tmp/reimport.log   
+    ssh $src_host "pg_dump $src_db" | psql $dst_db &>/tmp/reimport.log   
 fi
 
 # Postsrcipt here.
