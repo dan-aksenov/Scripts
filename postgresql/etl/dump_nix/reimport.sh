@@ -1,6 +1,7 @@
+# Display usage function.
 display_usage() {
         echo "Correct usage:"
-        echo "1 - dest db(to be droped), 2 - owner, 3 - source db, 4 -source host(defaults to localhost) "
+        echo "1 - dest db(to be droped and reimported), 2 - destination database desired owner, 3 - source database, 4 -source host(defaults to localhost)"
         }
 
 dst_db=$1
@@ -8,16 +9,11 @@ owner=$2
 src_db=$3
 src_host=$4
 
-# if less than 3 variables supplied
+# If less than 3 variables supplied.
 if [  $# -lt 3 ]
 then
         display_usage
         exit 1
-fi
-
-if [ !$scr_host ]
-then
-        scr_host=localhost
 fi
 
 # Drop dest database, with session disconnect and empty database creation.
@@ -27,15 +23,14 @@ drop database $dst_db;
 create database $dst_db with owner $owner;
 EOF
 
-# Reimport database from source
-# pg_dump -h "$src_host" $src_db | psql $dst_db &>/tmp/restore.log
+# Reimport database from source.
+if [ !$scr_host ]
+then
+    pg_dump $src_db | psql $dst_db &>/tmp/reimport.log
+else
+    ssh $src_host "pg_dump $src_db" | psql dbname &>/tmp/reimport.log   
+fi
 
-# ssh $src_host pg_dump --format custom --compress=5 --blobs --verbose --file /tmp/$src_db.dmp $src_db
-# scp $src_host:/tmp/$src_db.dmp /tmp/$src_db.dmp
-# pg_restore --dbname $dst_db --verbose /tmp/$src_db.dump &>/tmp/import.log
-
-ssh $src_host "pg_dump dbname" | psql dbname
-
-# postsrcipt
+# Postsrcipt here.
 # psql -c "UPDATE pg_language set lanpltrusted = true where lanname='pltclu'" $dst_db
 # psql -c "UPDATE pg_language set lanpltrusted = true where lanname='plpythonu'" $dst_db
