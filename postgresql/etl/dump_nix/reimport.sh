@@ -28,13 +28,13 @@ create database $dst_db with owner $owner;
 EOF
 
 # Reimport database from source
-# pg_dump -h "$src_host" --blobs $src_db | psql $dst_db &>/tmp/restore.log
+# pg_dump -h "$src_host" $src_db | psql $dst_db &>/tmp/restore.log
 
-ssh $src_host pg_dump --format custom --compress=5 --blobs --verbose --file /tmp/$src_db.dmp $src_db
-scp $src_host:/tmp/$src_db.dmp /tmp/$src_db.dmp
-pg_restore --dbname $dst_db --verbose /tmp/$src_db.dump &>/tmp/import.log
+# ssh $src_host pg_dump --format custom --compress=5 --blobs --verbose --file /tmp/$src_db.dmp $src_db
+# scp $src_host:/tmp/$src_db.dmp /tmp/$src_db.dmp
+# pg_restore --dbname $dst_db --verbose /tmp/$src_db.dump &>/tmp/import.log
 
-#ssh $src_host "pg_dump -C dbname" | psql dbname
+ssh $src_host "pg_dump dbname" | psql dbname
 
 # postsrcipt
 # psql -c "UPDATE pg_language set lanpltrusted = true where lanname='pltclu'" $dst_db
