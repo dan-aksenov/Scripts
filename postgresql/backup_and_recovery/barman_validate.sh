@@ -14,7 +14,7 @@ send_to=aksenov_d@tii.ru
 sudo -u postgres test -d $dir && sudo -u postgres rm -rf $dir && sudo -u postgres mkdir $dir -p
 
 # Restore from latest barman backup
-barman recover $pg latest $dir --remote-ssh-command "ssh postgres@pg-barman"
+barman recover $pg latest $dir --remote-ssh-command "ssh postgres@localhost"
 
 # Create simple postgresql.conf.
 cat > /tmp/postgresql.conf <<EOF
