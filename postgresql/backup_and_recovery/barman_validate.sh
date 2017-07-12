@@ -8,6 +8,8 @@ dow=$(date --date=${dateinfile#?_} "+%A"|cut -c -3)
 # Sandbox directory
 dir=/var/lib/pgsql/$ver/stage
 # to do: add tablespace part.
+# Storage directory for barman backup
+storage=/var/lib/barman
 
 # DBA contact to inform
 send_to=aksenov_d@tii.ru
@@ -32,8 +34,8 @@ sudo -u postgres cp /tmp/postgresql.conf $dir
 
 # Find .partial wal file for complete recovery
 # See http://docs.pgbarman.org/release/1.6.1/ limitations-of-partial-wal-files-with-recovery for more info.
-xlog=$(find $pg/streaming/ -name '*.partial' -exec basename {} \; | cut -d "." -f 1)
-sudo find $pg/streaming/ -type f -name '*.partial' -exec cp {} $dir/pg_xlog/$xlog \;
+xlog=$(find $storage/$pg/streaming/ -name '*.partial' -exec basename {} \; | cut -d "." -f 1)
+sudo find $storage/$pg/streaming/ -type f -name '*.partial' -exec cp {} $dir/pg_xlog/$xlog \;
 sudo chown postgres.postgres $dir/pg_xlog/$xlog
 sudo chmod 664 $dir/pg_xlog/$xlog
 
