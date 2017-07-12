@@ -7,6 +7,8 @@ ver=$(barman status $pg | grep -e "PostgreSQL version" | cut -d " " -f 3 | cut -
 dow=$(date --date=${dateinfile#?_} "+%A"|cut -c -3)
 # Sandbox directory
 dir=/var/lib/pgsql/$ver/stage
+# to do: add tablespace part.
+
 # DBA contact to inform
 send_to=aksenov_d@tii.ru
 
