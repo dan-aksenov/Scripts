@@ -14230,7 +14230,7 @@ GROUP BY rtime ) where trunc(rtime)>sysdate-365 group by trunc(rtime) ORDER BY 1
 				<FOOTNOTE_ALIGNMENT><![CDATA[LEFT]]></FOOTNOTE_ALIGNMENT>
 				<XAXIS_TICK_LABEL_SKIP_MODE><![CDATA[AUTOMATIC]]></XAXIS_TICK_LABEL_SKIP_MODE>
 				<DATA_MAP_COLNAMES><![CDATA[\,"MAXSIZE_MB","NAME","RTIME","SIZE_MB","USEDSIZE_MB"]]></DATA_MAP_COLNAMES>
-				<DATA_MAP_SERIES><![CDATA[\,"USEDSIZE_MB","MAXSIZE_MB","SIZE_MB"]]></DATA_MAP_SERIES>
+				<DATA_MAP_SERIES><![CDATA[\,'USEDSIZE_MB','MAXSIZE_MB','SIZE_MB']]></DATA_MAP_SERIES>
 				<Y2AXIS_LOGARITHMIC_BASE><![CDATA[BASE_10]]></Y2AXIS_LOGARITHMIC_BASE>
 				<DATA_MAP_COUNT><![CDATA[3]]></DATA_MAP_COUNT>
 				<STYLE><![CDATA[Default]]></STYLE>
@@ -14255,9 +14255,9 @@ GROUP BY rtime ) where trunc(rtime)>sysdate-365 group by trunc(rtime) ORDER BY 1
 FROM
   (SELECT to_date(rtime,'mm.dd.yyyy hh24:mi:ss') rtime,
     NAME,
-    ROUND((TABLESPACE_SIZE    *16*1024)/1024/1024,2) SIZE_MB,
-    ROUND((TABLESPACE_MAXSIZE *16*1024)/1024/1024,2) MAXSIZE_MB,
-    ROUND((TABLESPACE_USEDSIZE*16*1024)/1024/1024,2) USEDSIZE_MB
+    ROUND((TABLESPACE_SIZE    *:BLK_SZ *1024)/1024/1024,2) SIZE_MB,
+    ROUND((TABLESPACE_MAXSIZE *:BLK_SZ *1024)/1024/1024,2) MAXSIZE_MB,
+    ROUND((TABLESPACE_USEDSIZE*:BLK_SZ *1024)/1024/1024,2) USEDSIZE_MB
   FROM DBA_HIST_TBSPC_SPACE_USAGE A
   JOIN V$TABLESPACE B
   ON (A.TABLESPACE_ID = B.TS#)
@@ -14270,10 +14270,16 @@ GROUP BY TRUNC(rtime),
   name
 ORDER BY 1]]></sql>
 				<binds>
+					<bind id="BLK_SZ">
+						<prompt><![CDATA[BLK_SZ]]></prompt>
+						<tooltip><![CDATA[BLK_SZ]]></tooltip>
+						<value><![CDATA[8]]></value>
+						<bracket><![CDATA[null]]></bracket>
+					</bind>
 					<bind id="TBS">
 						<prompt><![CDATA[TBS]]></prompt>
 						<tooltip><![CDATA[TBS]]></tooltip>
-						<value><![CDATA[FDC_MTK_BA_TABLE]]></value>
+						<value><![CDATA[USERS]]></value>
 						<bracket><![CDATA[null]]></bracket>
 					</bind>
 					<bind id="DAYS_BACK">
