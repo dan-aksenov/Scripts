@@ -50,7 +50,7 @@ mkdir $BACKUPDIR/$CURRENT
 
 # -F t added to handle custom tablespaces. //dbax
 # -x added for backup xlog also. //dbax
-$PG_BASEBACKUP -l "basebackup $(date +%m-%d-%Y_%H)" -U postgres -D $BACKUPDIR/$CURRENT -F t -x
+$PG_BASEBACKUP -l "basebackup $(date +%m-%d-%Y_%H)" -U postgres -D $BACKUPDIR/$CURRENT -F t -X s
 chmod 700 $BACKUPDIR/$CURRENT
 
 # remove old backups
