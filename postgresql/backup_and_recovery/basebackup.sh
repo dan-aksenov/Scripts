@@ -9,7 +9,7 @@
 PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/pgsql-9.4/bin"
 PGHOME=/var/lib/pgsql/9.4
 #PGDATA=$HOME/data # Not used for now //dbax
-PGARCH=/$(psql -c "show archive_command" | grep %p | cut -d"/" -f2- | cut -d"%" -f1)
+PGARCH=/$(psql -qAtX -c "show archive_command" | cut -d"/" -f2- | cut -d"%" -f1)
 PG_BASEBACKUP=$(which pg_basebackup)
 PG_ARCHIVECLEANUP=$(which pg_archivecleanup)
 CURRENT="db-$(date +%m-%d-%Y_%H)"
