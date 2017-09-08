@@ -10,7 +10,7 @@
 		<tooltip><![CDATA[]]></tooltip>
 		<drillclass><![CDATA[]]></drillclass>
 		<CustomValues>
-			<TYPE>horizontal</TYPE>
+			<TYPE><![CDATA[horizontal]]></TYPE>
 		</CustomValues>
 		<query>
 			<sql><![CDATA[select pid, a.* from pg_stat_activity a]]></sql>
@@ -43,14 +43,14 @@
 					
 					
 					
-					null																																																																																										</data>
+					
+					
+					
+					null																																																																																																									</data>
 				</header>
 				<footer enable="false" generatedate="false">
 					<data value="null" />
 				</footer>
-				<security enable="false" useopenpassword="false" openpassword="null" encryption="EXCLUDE_METADATA">
-					<permission enable="false" permissionpassword="null" allowcopying="true" allowprinting="true" allowupdating="false" allowaccessdevices="false" />
-				</security>
 				<pagesetup papersize="LETTER" orientation="1" measurement="in" margintop="1.0" marginbottom="1.0" marginleft="1.0" marginright="1.0" />
 			</pdf>
 		<display id="" type="" style="Table" enable="true">
@@ -59,7 +59,7 @@
 			<tooltip><![CDATA[]]></tooltip>
 			<drillclass><![CDATA[]]></drillclass>
 			<CustomValues>
-				<TYPE>horizontal</TYPE>
+				<TYPE><![CDATA[horizontal]]></TYPE>
 			</CustomValues>
 			<query>
 				<sql><![CDATA[SELECT sample_ts min, class_name, event_name evt,wait_time wtt FROM PG_STAT_WAIT_CURRENT 
@@ -100,14 +100,14 @@ and pid = :pid]]></sql>
 						
 						
 						
-						null																																																																																																</data>
+						
+						
+						
+						null																																																																																																																		</data>
 					</header>
 					<footer enable="false" generatedate="false">
 						<data value="null" />
 					</footer>
-					<security enable="false" useopenpassword="false" openpassword="null" encryption="EXCLUDE_METADATA">
-						<permission enable="false" permissionpassword="null" allowcopying="true" allowprinting="true" allowupdating="false" allowaccessdevices="false" />
-					</security>
 					<pagesetup papersize="LETTER" orientation="1" measurement="in" margintop="1.0" marginbottom="1.0" marginleft="1.0" marginright="1.0" />
 				</pdf>
 		</display>
@@ -117,7 +117,7 @@ and pid = :pid]]></sql>
 			<tooltip><![CDATA[]]></tooltip>
 			<drillclass><![CDATA[]]></drillclass>
 			<CustomValues>
-				<TYPE>horizontal</TYPE>
+				<TYPE><![CDATA[horizontal]]></TYPE>
 			</CustomValues>
 			<query>
 				<sql><![CDATA[select * from pg_stat_wait_profile
@@ -158,14 +158,14 @@ order by wait_time desc]]></sql>
 						
 						
 						
-						null																																																																																																</data>
+						
+						
+						
+						null																																																																																																																		</data>
 					</header>
 					<footer enable="false" generatedate="false">
 						<data value="null" />
 					</footer>
-					<security enable="false" useopenpassword="false" openpassword="null" encryption="EXCLUDE_METADATA">
-						<permission enable="false" permissionpassword="null" allowcopying="true" allowprinting="true" allowupdating="false" allowaccessdevices="false" />
-					</security>
 					<pagesetup papersize="LETTER" orientation="1" measurement="in" margintop="1.0" marginbottom="1.0" marginleft="1.0" marginright="1.0" />
 				</pdf>
 		</display>
@@ -176,7 +176,7 @@ order by wait_time desc]]></sql>
 		<tooltip><![CDATA[]]></tooltip>
 		<drillclass><![CDATA[]]></drillclass>
 		<CustomValues>
-			<TYPE>horizontal</TYPE>
+			<TYPE><![CDATA[horizontal]]></TYPE>
 		</CustomValues>
 		<query>
 			<sql><![CDATA[select * from pg_stat_database]]></sql>
@@ -209,14 +209,14 @@ order by wait_time desc]]></sql>
 					
 					
 					
-					null																																																																																										</data>
+					
+					
+					
+					null																																																																																																									</data>
 				</header>
 				<footer enable="false" generatedate="false">
 					<data value="null" />
 				</footer>
-				<security enable="false" useopenpassword="false" openpassword="null" encryption="EXCLUDE_METADATA">
-					<permission enable="false" permissionpassword="null" allowcopying="true" allowprinting="true" allowupdating="false" allowaccessdevices="false" />
-				</security>
 				<pagesetup papersize="LETTER" orientation="1" measurement="in" margintop="1.0" marginbottom="1.0" marginleft="1.0" marginright="1.0" />
 			</pdf>
 	</display>
@@ -226,7 +226,7 @@ order by wait_time desc]]></sql>
 		<tooltip><![CDATA[]]></tooltip>
 		<drillclass><![CDATA[]]></drillclass>
 		<CustomValues>
-			<TYPE>horizontal</TYPE>
+			<TYPE><![CDATA[horizontal]]></TYPE>
 		</CustomValues>
 		<query>
 			<sql><![CDATA[select * from pg_stat_bgwriter]]></sql>
@@ -259,173 +259,14 @@ order by wait_time desc]]></sql>
 					
 					
 					
-					null																																																																																										</data>
+					
+					
+					
+					null																																																																																																									</data>
 				</header>
 				<footer enable="false" generatedate="false">
 					<data value="null" />
 				</footer>
-				<security enable="false" useopenpassword="false" openpassword="null" encryption="EXCLUDE_METADATA">
-					<permission enable="false" permissionpassword="null" allowcopying="true" allowprinting="true" allowupdating="false" allowaccessdevices="false" />
-				</security>
-				<pagesetup papersize="LETTER" orientation="1" measurement="in" margintop="1.0" marginbottom="1.0" marginleft="1.0" marginright="1.0" />
-			</pdf>
-	</display>
-	<display id="52c4b7c3-0154-1000-8001-c0a89ecdf516" type="" style="Chart" enable="true">
-		<name><![CDATA[lkk_com_auth_hourly]]></name>
-		<description><![CDATA[]]></description>
-		<tooltip><![CDATA[]]></tooltip>
-		<drillclass><![CDATA[]]></drillclass>
-		<CustomValues>
-			<PLOT_HGRID_WIDTH>THINNER</PLOT_HGRID_WIDTH>
-			<Y1AXIS_SCALE_INCREMENT>10.0</Y1AXIS_SCALE_INCREMENT>
-			<Y2AXIS_SCALE_MAXIMUM>80.0</Y2AXIS_SCALE_MAXIMUM>
-			<Y1AXIS_LINE_WIDTH>THINNEST</Y1AXIS_LINE_WIDTH>
-			<Y1AXIS_TITLE_ALIGNMENT>CENTER</Y1AXIS_TITLE_ALIGNMENT>
-			<LEGEND_LOCATION>AUTOMATIC</LEGEND_LOCATION>
-			<LEGEND_ALIGNMENT>LEFT</LEGEND_ALIGNMENT>
-			<XAXIS_LINE_WIDTH>THINNEST</XAXIS_LINE_WIDTH>
-			<DATA_MAP_COLUMNS>\,"date_trunc"</DATA_MAP_COLUMNS>
-			<Y1AXIS_SCALE_MAXIMUM>60.0</Y1AXIS_SCALE_MAXIMUM>
-			<XAXIS_TITLE_ALIGNMENT>CENTER</XAXIS_TITLE_ALIGNMENT>
-			<XAXIS_TICK_LABEL_ROTATE>HORIZONTAL</XAXIS_TICK_LABEL_ROTATE>
-			<Y1AXIS_LOGARITHMIC_BASE>BASE_10</Y1AXIS_LOGARITHMIC_BASE>
-			<TYPE>LINE_VERT_ABS</TYPE>
-			<GRID_WIDTH>THINNER</GRID_WIDTH>
-			<PLOT_DATALABELS_BAR_POSITION>ABOVE</PLOT_DATALABELS_BAR_POSITION>
-			<FOOTNOTE_ALIGNMENT>LEFT</FOOTNOTE_ALIGNMENT>
-			<XAXIS_TICK_LABEL_SKIP_MODE>AUTOMATIC</XAXIS_TICK_LABEL_SKIP_MODE>
-			<DATA_MAP_COLNAMES>\,"count","date_trunc"</DATA_MAP_COLNAMES>
-			<DATA_MAP_SERIES>\,auth</DATA_MAP_SERIES>
-			<Y2AXIS_LOGARITHMIC_BASE>BASE_10</Y2AXIS_LOGARITHMIC_BASE>
-			<STYLE>Default</STYLE>
-			<TITLE_ALIGNMENT>LEFT</TITLE_ALIGNMENT>
-			<Y2AXIS_TICK_LABEL_ROTATE>HORIZONTAL</Y2AXIS_TICK_LABEL_ROTATE>
-			<Y2AXIS_SCALE_MINIMUM>10.0</Y2AXIS_SCALE_MINIMUM>
-			<Y2AXIS_LINE_WIDTH>THINNEST</Y2AXIS_LINE_WIDTH>
-			<DATA_MAP_VALUES>\,"count"</DATA_MAP_VALUES>
-			<Y1AXIS_TICK_LABEL_ROTATE>HORIZONTAL</Y1AXIS_TICK_LABEL_ROTATE>
-			<Y2AXIS_SCALE_INCREMENT>20.0</Y2AXIS_SCALE_INCREMENT>
-			<PLOT_VGRID_WIDTH>THINNER</PLOT_VGRID_WIDTH>
-			<Y2AXIS_TITLE_ALIGNMENT>CENTER</Y2AXIS_TITLE_ALIGNMENT>
-			<SUBTITLE_ALIGNMENT>LEFT</SUBTITLE_ALIGNMENT>
-		</CustomValues>
-		<query>
-			<sql><![CDATA[select date_trunc('hour', dt_last_auth),count(*) from public.lkk_auth_hist group by date_trunc('hour', dt_last_auth) having 
-date_trunc('hour', dt_last_auth) > now()- interval '10 days'
-order by 1]]></sql>
-		</query>
-			<pdf version="VERSION_1_7" compression="CONTENT">
-				<docproperty title="" author="" subject="" keywords="" />
-				<cell toppadding="2" bottompadding="2" leftpadding="2" rightpadding="2" horizontalalign="LEFT" verticalalign="TOP" wrap="true" />
-				<column>
-					<heading font="null" size="10" style="NORMAL" color="-16777216" rowshading="-1" labeling="FIRST_PAGE" />
-					<footing font="null" size="10" style="NORMAL" color="-16777216" rowshading="-1" labeling="NONE" />
-					<blob blob="NONE" zip="false" />
-				</column>
-				<table font="null" size="10" style="NORMAL" color="-16777216" userowshading="false" oddrowshading="-1" evenrowshading="-1" showborders="true" spacingbefore="12" spacingafter="12" horizontalalign="LEFT" />
-				<header enable="false" generatedate="false">
-					<data>
-					
-					
-					
-					
-					
-					
-					
-					
-					
-					
-					
-					
-					
-					null																																																																						</data>
-				</header>
-				<footer enable="false" generatedate="false">
-					<data value="null" />
-				</footer>
-				<security enable="false" useopenpassword="false" openpassword="null" encryption="EXCLUDE_METADATA">
-					<permission enable="false" permissionpassword="null" allowcopying="true" allowprinting="true" allowupdating="false" allowaccessdevices="false" />
-				</security>
-				<pagesetup papersize="LETTER" orientation="1" measurement="in" margintop="1.0" marginbottom="1.0" marginleft="1.0" marginright="1.0" />
-			</pdf>
-	</display>
-	<display id="52f72b4c-0154-1000-8005-c0a89ecdf516" type="" style="Chart" enable="true">
-		<name><![CDATA[lkk_com_auth_daily]]></name>
-		<description><![CDATA[]]></description>
-		<tooltip><![CDATA[]]></tooltip>
-		<drillclass><![CDATA[]]></drillclass>
-		<CustomValues>
-			<PLOT_HGRID_WIDTH>THINNER</PLOT_HGRID_WIDTH>
-			<Y1AXIS_SCALE_INCREMENT>10.0</Y1AXIS_SCALE_INCREMENT>
-			<Y2AXIS_SCALE_MAXIMUM>80.0</Y2AXIS_SCALE_MAXIMUM>
-			<Y1AXIS_LINE_WIDTH>THINNEST</Y1AXIS_LINE_WIDTH>
-			<Y1AXIS_TITLE_ALIGNMENT>CENTER</Y1AXIS_TITLE_ALIGNMENT>
-			<LEGEND_LOCATION>AUTOMATIC</LEGEND_LOCATION>
-			<LEGEND_ALIGNMENT>LEFT</LEGEND_ALIGNMENT>
-			<XAXIS_LINE_WIDTH>THINNEST</XAXIS_LINE_WIDTH>
-			<DATA_MAP_COLUMNS>\,"date_trunc"</DATA_MAP_COLUMNS>
-			<Y1AXIS_SCALE_MAXIMUM>60.0</Y1AXIS_SCALE_MAXIMUM>
-			<XAXIS_TITLE_ALIGNMENT>CENTER</XAXIS_TITLE_ALIGNMENT>
-			<XAXIS_TICK_LABEL_ROTATE>HORIZONTAL</XAXIS_TICK_LABEL_ROTATE>
-			<Y1AXIS_LOGARITHMIC_BASE>BASE_10</Y1AXIS_LOGARITHMIC_BASE>
-			<TYPE>LINE_VERT_ABS</TYPE>
-			<GRID_WIDTH>THINNER</GRID_WIDTH>
-			<PLOT_DATALABELS_BAR_POSITION>ABOVE</PLOT_DATALABELS_BAR_POSITION>
-			<FOOTNOTE_ALIGNMENT>LEFT</FOOTNOTE_ALIGNMENT>
-			<XAXIS_TICK_LABEL_SKIP_MODE>AUTOMATIC</XAXIS_TICK_LABEL_SKIP_MODE>
-			<DATA_MAP_COLNAMES>\,"count","date_trunc"</DATA_MAP_COLNAMES>
-			<DATA_MAP_SERIES>\,auth</DATA_MAP_SERIES>
-			<Y2AXIS_LOGARITHMIC_BASE>BASE_10</Y2AXIS_LOGARITHMIC_BASE>
-			<STYLE>Default</STYLE>
-			<TITLE_ALIGNMENT>LEFT</TITLE_ALIGNMENT>
-			<Y2AXIS_TICK_LABEL_ROTATE>HORIZONTAL</Y2AXIS_TICK_LABEL_ROTATE>
-			<Y2AXIS_SCALE_MINIMUM>10.0</Y2AXIS_SCALE_MINIMUM>
-			<Y2AXIS_LINE_WIDTH>THINNEST</Y2AXIS_LINE_WIDTH>
-			<DATA_MAP_VALUES>\,"count"</DATA_MAP_VALUES>
-			<Y1AXIS_TICK_LABEL_ROTATE>HORIZONTAL</Y1AXIS_TICK_LABEL_ROTATE>
-			<Y2AXIS_SCALE_INCREMENT>20.0</Y2AXIS_SCALE_INCREMENT>
-			<PLOT_VGRID_WIDTH>THINNER</PLOT_VGRID_WIDTH>
-			<Y2AXIS_TITLE_ALIGNMENT>CENTER</Y2AXIS_TITLE_ALIGNMENT>
-			<SUBTITLE_ALIGNMENT>LEFT</SUBTITLE_ALIGNMENT>
-		</CustomValues>
-		<query>
-			<sql><![CDATA[select date_trunc('day', dt_last_auth),count(*) from public.lkk_auth_hist group by date_trunc('day', dt_last_auth) having 
-date_trunc('day', dt_last_auth) > now()- interval '60 days'
-order by 1]]></sql>
-		</query>
-			<pdf version="VERSION_1_7" compression="CONTENT">
-				<docproperty title="null" author="null" subject="null" keywords="null" />
-				<cell toppadding="2" bottompadding="2" leftpadding="2" rightpadding="2" horizontalalign="LEFT" verticalalign="TOP" wrap="true" />
-				<column>
-					<heading font="null" size="10" style="NORMAL" color="-16777216" rowshading="-1" labeling="FIRST_PAGE" />
-					<footing font="null" size="10" style="NORMAL" color="-16777216" rowshading="-1" labeling="NONE" />
-					<blob blob="NONE" zip="false" />
-				</column>
-				<table font="null" size="10" style="NORMAL" color="-16777216" userowshading="false" oddrowshading="-1" evenrowshading="-1" showborders="true" spacingbefore="12" spacingafter="12" horizontalalign="LEFT" />
-				<header enable="false" generatedate="false">
-					<data>
-					
-					
-					
-					
-					
-					
-					
-					
-					
-					
-					
-					
-					
-					
-				null																																																																										</data>
-				</header>
-				<footer enable="false" generatedate="false">
-					<data value="null" />
-				</footer>
-				<security enable="false" useopenpassword="false" openpassword="null" encryption="EXCLUDE_METADATA">
-					<permission enable="false" permissionpassword="null" allowcopying="true" allowprinting="true" allowupdating="false" allowaccessdevices="false" />
-				</security>
 				<pagesetup papersize="LETTER" orientation="1" measurement="in" margintop="1.0" marginbottom="1.0" marginleft="1.0" marginright="1.0" />
 			</pdf>
 	</display>
@@ -435,7 +276,7 @@ order by 1]]></sql>
 		<tooltip><![CDATA[]]></tooltip>
 		<drillclass><![CDATA[]]></drillclass>
 		<CustomValues>
-			<TYPE>horizontal</TYPE>
+			<TYPE><![CDATA[horizontal]]></TYPE>
 		</CustomValues>
 		<query>
 			<sql><![CDATA[select * from pg_stat_statements]]></sql>
@@ -464,159 +305,14 @@ order by 1]]></sql>
 					
 					
 					
-					null																																																																						</data>
+					
+					
+					
+					null																																																																																					</data>
 				</header>
 				<footer enable="false" generatedate="false">
 					<data value="null" />
 				</footer>
-				<security enable="false" useopenpassword="false" openpassword="null" encryption="EXCLUDE_METADATA">
-					<permission enable="false" permissionpassword="null" allowcopying="true" allowprinting="true" allowupdating="false" allowaccessdevices="false" />
-				</security>
-				<pagesetup papersize="LETTER" orientation="1" measurement="in" margintop="1.0" marginbottom="1.0" marginleft="1.0" marginright="1.0" />
-			</pdf>
-	</display>
-	<display id="7283a672-0155-1000-8004-c0a89ecdff39" type="" style="Chart" enable="true">
-		<name><![CDATA[lkk_com_auth_monthly]]></name>
-		<description><![CDATA[]]></description>
-		<tooltip><![CDATA[]]></tooltip>
-		<drillclass><![CDATA[]]></drillclass>
-		<CustomValues>
-			<PLOT_HGRID_WIDTH>THINNER</PLOT_HGRID_WIDTH>
-			<Y1AXIS_SCALE_INCREMENT>10.0</Y1AXIS_SCALE_INCREMENT>
-			<Y2AXIS_SCALE_MAXIMUM>80.0</Y2AXIS_SCALE_MAXIMUM>
-			<Y1AXIS_LINE_WIDTH>THINNEST</Y1AXIS_LINE_WIDTH>
-			<Y1AXIS_TITLE_ALIGNMENT>CENTER</Y1AXIS_TITLE_ALIGNMENT>
-			<LEGEND_LOCATION>AUTOMATIC</LEGEND_LOCATION>
-			<LEGEND_ALIGNMENT>LEFT</LEGEND_ALIGNMENT>
-			<XAXIS_LINE_WIDTH>THINNEST</XAXIS_LINE_WIDTH>
-			<DATA_MAP_COLUMNS>\,"date_trunc"</DATA_MAP_COLUMNS>
-			<Y1AXIS_SCALE_MAXIMUM>60.0</Y1AXIS_SCALE_MAXIMUM>
-			<XAXIS_TITLE_ALIGNMENT>CENTER</XAXIS_TITLE_ALIGNMENT>
-			<XAXIS_TICK_LABEL_ROTATE>HORIZONTAL</XAXIS_TICK_LABEL_ROTATE>
-			<Y1AXIS_LOGARITHMIC_BASE>BASE_10</Y1AXIS_LOGARITHMIC_BASE>
-			<TYPE>BAR_VERT_CLUST</TYPE>
-			<GRID_WIDTH>THINNER</GRID_WIDTH>
-			<PLOT_DATALABELS_BAR_POSITION>ABOVE</PLOT_DATALABELS_BAR_POSITION>
-			<FOOTNOTE_ALIGNMENT>LEFT</FOOTNOTE_ALIGNMENT>
-			<XAXIS_TICK_LABEL_SKIP_MODE>AUTOMATIC</XAXIS_TICK_LABEL_SKIP_MODE>
-			<DATA_MAP_COLNAMES>\,"count","date_trunc"</DATA_MAP_COLNAMES>
-			<DATA_MAP_SERIES>\,month</DATA_MAP_SERIES>
-			<Y2AXIS_LOGARITHMIC_BASE>BASE_10</Y2AXIS_LOGARITHMIC_BASE>
-			<STYLE>Default</STYLE>
-			<TITLE_ALIGNMENT>LEFT</TITLE_ALIGNMENT>
-			<Y2AXIS_TICK_LABEL_ROTATE>HORIZONTAL</Y2AXIS_TICK_LABEL_ROTATE>
-			<Y2AXIS_SCALE_MINIMUM>10.0</Y2AXIS_SCALE_MINIMUM>
-			<Y2AXIS_LINE_WIDTH>THINNEST</Y2AXIS_LINE_WIDTH>
-			<DATA_MAP_VALUES>\,"count"</DATA_MAP_VALUES>
-			<Y1AXIS_TICK_LABEL_ROTATE>HORIZONTAL</Y1AXIS_TICK_LABEL_ROTATE>
-			<Y2AXIS_SCALE_INCREMENT>20.0</Y2AXIS_SCALE_INCREMENT>
-			<PLOT_VGRID_WIDTH>THINNER</PLOT_VGRID_WIDTH>
-			<Y2AXIS_TITLE_ALIGNMENT>CENTER</Y2AXIS_TITLE_ALIGNMENT>
-			<SUBTITLE_ALIGNMENT>LEFT</SUBTITLE_ALIGNMENT>
-		</CustomValues>
-		<query>
-			<sql><![CDATA[select date_trunc('month', dt_last_auth),count(*) from public.lkk_auth_hist group by date_trunc('month', dt_last_auth) having 
-date_trunc('month', dt_last_auth) > now()- interval '365 days'
-order by 1]]></sql>
-		</query>
-			<pdf version="VERSION_1_7" compression="CONTENT">
-				<docproperty title="null" author="null" subject="null" keywords="null" />
-				<cell toppadding="2" bottompadding="2" leftpadding="2" rightpadding="2" horizontalalign="LEFT" verticalalign="TOP" wrap="true" />
-				<column>
-					<heading font="null" size="10" style="NORMAL" color="-16777216" rowshading="-1" labeling="FIRST_PAGE" />
-					<footing font="null" size="10" style="NORMAL" color="-16777216" rowshading="-1" labeling="NONE" />
-					<blob blob="NONE" zip="false" />
-				</column>
-				<table font="null" size="10" style="NORMAL" color="-16777216" userowshading="false" oddrowshading="-1" evenrowshading="-1" showborders="true" spacingbefore="12" spacingafter="12" horizontalalign="LEFT" />
-				<header enable="false" generatedate="false">
-					<data>
-					
-					
-					
-					
-					
-					
-					
-					
-					
-					null																																																		</data>
-				</header>
-				<footer enable="false" generatedate="false">
-					<data value="null" />
-				</footer>
-				<security enable="false" useopenpassword="false" openpassword="null" encryption="EXCLUDE_METADATA">
-					<permission enable="false" permissionpassword="null" allowcopying="true" allowprinting="true" allowupdating="false" allowaccessdevices="false" />
-				</security>
-				<pagesetup papersize="LETTER" orientation="1" measurement="in" margintop="1.0" marginbottom="1.0" marginleft="1.0" marginright="1.0" />
-			</pdf>
-	</display>
-	<display id="d6c73f4e-0157-1000-8005-c0a89ecdb41b" type="" style="Chart" enable="true">
-		<name><![CDATA[lkk_com_minutely]]></name>
-		<description><![CDATA[]]></description>
-		<tooltip><![CDATA[]]></tooltip>
-		<drillclass><![CDATA[]]></drillclass>
-		<CustomValues>
-			<PLOT_HGRID_WIDTH>THINNER</PLOT_HGRID_WIDTH>
-			<Y1AXIS_SCALE_INCREMENT>10.0</Y1AXIS_SCALE_INCREMENT>
-			<Y2AXIS_SCALE_MAXIMUM>80.0</Y2AXIS_SCALE_MAXIMUM>
-			<Y1AXIS_LINE_WIDTH>THINNEST</Y1AXIS_LINE_WIDTH>
-			<Y1AXIS_TITLE_ALIGNMENT>CENTER</Y1AXIS_TITLE_ALIGNMENT>
-			<LEGEND_LOCATION>AUTOMATIC</LEGEND_LOCATION>
-			<LEGEND_ALIGNMENT>LEFT</LEGEND_ALIGNMENT>
-			<XAXIS_LINE_WIDTH>THINNEST</XAXIS_LINE_WIDTH>
-			<DATA_MAP_COLUMNS>\,"date_trunc"</DATA_MAP_COLUMNS>
-			<Y1AXIS_SCALE_MAXIMUM>60.0</Y1AXIS_SCALE_MAXIMUM>
-			<XAXIS_TITLE_ALIGNMENT>CENTER</XAXIS_TITLE_ALIGNMENT>
-			<XAXIS_TICK_LABEL_ROTATE>HORIZONTAL</XAXIS_TICK_LABEL_ROTATE>
-			<Y1AXIS_LOGARITHMIC_BASE>BASE_10</Y1AXIS_LOGARITHMIC_BASE>
-			<TYPE>BAR_VERT_CLUST</TYPE>
-			<GRID_WIDTH>THINNER</GRID_WIDTH>
-			<PLOT_DATALABELS_BAR_POSITION>ABOVE</PLOT_DATALABELS_BAR_POSITION>
-			<FOOTNOTE_ALIGNMENT>LEFT</FOOTNOTE_ALIGNMENT>
-			<XAXIS_TICK_LABEL_SKIP_MODE>AUTOMATIC</XAXIS_TICK_LABEL_SKIP_MODE>
-			<DATA_MAP_COLNAMES>\,"count","date_trunc"</DATA_MAP_COLNAMES>
-			<DATA_MAP_SERIES>\,count</DATA_MAP_SERIES>
-			<Y2AXIS_LOGARITHMIC_BASE>BASE_10</Y2AXIS_LOGARITHMIC_BASE>
-			<STYLE>Default</STYLE>
-			<TITLE_ALIGNMENT>LEFT</TITLE_ALIGNMENT>
-			<Y2AXIS_TICK_LABEL_ROTATE>HORIZONTAL</Y2AXIS_TICK_LABEL_ROTATE>
-			<Y2AXIS_SCALE_MINIMUM>10.0</Y2AXIS_SCALE_MINIMUM>
-			<Y2AXIS_LINE_WIDTH>THINNEST</Y2AXIS_LINE_WIDTH>
-			<DATA_MAP_VALUES>\,"count"</DATA_MAP_VALUES>
-			<Y1AXIS_TICK_LABEL_ROTATE>HORIZONTAL</Y1AXIS_TICK_LABEL_ROTATE>
-			<Y2AXIS_SCALE_INCREMENT>20.0</Y2AXIS_SCALE_INCREMENT>
-			<PLOT_VGRID_WIDTH>THINNER</PLOT_VGRID_WIDTH>
-			<Y2AXIS_TITLE_ALIGNMENT>CENTER</Y2AXIS_TITLE_ALIGNMENT>
-			<SUBTITLE_ALIGNMENT>LEFT</SUBTITLE_ALIGNMENT>
-		</CustomValues>
-		<query>
-			<sql><![CDATA[select date_trunc('minute', dt_last_auth),count(*) from public.lkk_auth_hist group by date_trunc('minute', dt_last_auth) having 
-date_trunc('minute', dt_last_auth) > now()- interval '180 minute'
-order by 1]]></sql>
-		</query>
-			<pdf version="VERSION_1_7" compression="CONTENT">
-				<docproperty title="null" author="null" subject="null" keywords="null" />
-				<cell toppadding="2" bottompadding="2" leftpadding="2" rightpadding="2" horizontalalign="LEFT" verticalalign="TOP" wrap="true" />
-				<column>
-					<heading font="null" size="10" style="NORMAL" color="-16777216" rowshading="-1" labeling="FIRST_PAGE" />
-					<footing font="null" size="10" style="NORMAL" color="-16777216" rowshading="-1" labeling="NONE" />
-					<blob blob="NONE" zip="false" />
-				</column>
-				<table font="null" size="10" style="NORMAL" color="-16777216" userowshading="false" oddrowshading="-1" evenrowshading="-1" showborders="true" spacingbefore="12" spacingafter="12" horizontalalign="LEFT" />
-				<header enable="false" generatedate="false">
-					<data>
-					
-					
-					
-					
-					null																									</data>
-				</header>
-				<footer enable="false" generatedate="false">
-					<data value="null" />
-				</footer>
-				<security enable="false" useopenpassword="false" openpassword="null" encryption="EXCLUDE_METADATA">
-					<permission enable="false" permissionpassword="null" allowcopying="true" allowprinting="true" allowupdating="false" allowaccessdevices="false" />
-				</security>
 				<pagesetup papersize="LETTER" orientation="1" measurement="in" margintop="1.0" marginbottom="1.0" marginleft="1.0" marginright="1.0" />
 			</pdf>
 	</display>
