@@ -13,7 +13,8 @@
 			<TYPE><![CDATA[horizontal]]></TYPE>
 		</CustomValues>
 		<query>
-			<sql><![CDATA[select now()-a.datetime time_ago, a.datetime last_ex, a.info info, a.is_success success from event.fdc_app_log a where category_id = 1853947 and info like 'Выполнена%' order by datetime desc limit 1]]></sql>
+			<sql><![CDATA[select (case when (now()-a.datetime)>interval '15 minutes' then 'ALARM: ' ||(now()-a.datetime)  else 'all fine: ' || (now()-a.datetime) end )
+time_ago from event.fdc_app_log a where category_id = 1853947 and info like 'Выполнена%' order by datetime desc limit 1]]></sql>
 		</query>
 			<pdf version="VERSION_1_7" compression="CONTENT">
 				<docproperty title="null" author="null" subject="null" keywords="null" />
