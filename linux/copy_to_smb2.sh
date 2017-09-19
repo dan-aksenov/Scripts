@@ -6,7 +6,7 @@ BACKUP_DIR=$HOME/9.4/backups/
 if mountpoint -q -- $MOUNT_DIR; 
  then
   printf '%s\n' "$dir is mounted"
- else printf '%s\n' "$dir is a mounted, exiting" && exit 1 
+ else printf '%s\n' "$dir is not mounted, exiting" && exit 1 
 fi
 
 # Copy backups to remote windows location
