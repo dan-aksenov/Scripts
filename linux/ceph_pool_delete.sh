@@ -1,3 +1,6 @@
+# recreate pools with lower pg count
+# First - stop rados gw
+
 old_pool=$1
 new_pool=new.$old_pool
 
@@ -14,3 +17,5 @@ ceph osd pool rename $old_pool old.$old_pool
 
 # Rename the new pool to original name.
 ceph osd pool rename $new_pool $old_pool
+
+# Now can start radow gw.
