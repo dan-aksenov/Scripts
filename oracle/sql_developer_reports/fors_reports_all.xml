@@ -2,8 +2,8 @@
 <displays>
 <folder>
 	<name><![CDATA[FORS]]></name>
-	<tooltip><![CDATA[]]></tooltip>
-	<description><![CDATA[]]></description>
+	<tooltip><![CDATA[FORS]]></tooltip>
+	<description><![CDATA[ ]]></description>
 		<display id="608c6d36-015e-1000-8001-0a132011332e" type="" style="Table" enable="true">
 		<name><![CDATA[skpdi_scheduler_reports]]></name>
 		<description><![CDATA[]]></description>
@@ -27,7 +27,8 @@ time_ago from event.fdc_app_log a where category_id = 1853947 and info like 'Ð’Ñ
 				<table font="null" size="10" style="NORMAL" color="-16777216" userowshading="false" oddrowshading="-1" evenrowshading="-1" showborders="true" spacingbefore="12" spacingafter="12" horizontalalign="LEFT" />
 				<header enable="false" generatedate="false">
 					<data>
-					null					</data>
+					
+					null										</data>
 				</header>
 				<footer enable="false" generatedate="false">
 					<data value="null" />

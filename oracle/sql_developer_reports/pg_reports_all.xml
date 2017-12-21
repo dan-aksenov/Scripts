@@ -46,7 +46,8 @@
 					
 					
 					
-					null																																																																																																									</data>
+					
+					null																																																																																																														</data>
 				</header>
 				<footer enable="false" generatedate="false">
 					<data value="null" />
@@ -103,7 +104,8 @@ and pid = :pid]]></sql>
 						
 						
 						
-						null																																																																																																																		</data>
+						
+						null																																																																																																																								</data>
 					</header>
 					<footer enable="false" generatedate="false">
 						<data value="null" />
@@ -161,7 +163,8 @@ order by wait_time desc]]></sql>
 						
 						
 						
-						null																																																																																																																		</data>
+						
+						null																																																																																																																								</data>
 					</header>
 					<footer enable="false" generatedate="false">
 						<data value="null" />
@@ -212,7 +215,8 @@ order by wait_time desc]]></sql>
 					
 					
 					
-					null																																																																																																									</data>
+					
+					null																																																																																																														</data>
 				</header>
 				<footer enable="false" generatedate="false">
 					<data value="null" />
@@ -262,7 +266,8 @@ order by wait_time desc]]></sql>
 					
 					
 					
-					null																																																																																																									</data>
+					
+					null																																																																																																														</data>
 				</header>
 				<footer enable="false" generatedate="false">
 					<data value="null" />
@@ -308,7 +313,8 @@ order by wait_time desc]]></sql>
 					
 					
 					
-					null																																																																																					</data>
+					
+					null																																																																																										</data>
 				</header>
 				<footer enable="false" generatedate="false">
 					<data value="null" />
