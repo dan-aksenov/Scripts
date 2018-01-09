@@ -1,6 +1,5 @@
 # Postgresql archive cleanup script
 PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/pgsql-9.4/bin"
-PGHOME=/var/lib/pgsql/9.4
 PGARCH=/u01/pgsql/9.4/backups/arch
 PG_ARCHIVECLEANUP=$(which pg_archivecleanup)
 AGE="-mtime +3"
