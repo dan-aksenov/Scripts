@@ -1,4 +1,8 @@
 #!/bin/bash
+
+# list of nodes must be supplied as quoted, space separated list. ie "node1 node2".
+NODES=$1
+
 #pcs property set stonith-enabled="false"
 pcs cluster cib pgsql_cfg
 pcs -f pgsql_cfg resource create  repmasterIP IPaddr2 ip=host_ip cidr_netmask=16 --group PGMGROUP
@@ -11,11 +15,12 @@ tmpdir="/var/lib/pgsql/tmp" \
 socketdir="/var/lib/pgsql/tmp" \
 pgport="5432" \
 pgdba="postgres" \
-node_list="node1 node2" \
+node_list=$NODES \
 rep_mode="sync" \
-restore_command="cp /var/lib/pgsql/pg_archive/%f %p" \
-archive_cleanup_command="/usr/pgsql-9.5/bin/pg_archivecleanup /var/lib/pgsql/pg_archive %r" \
+#restore_command="cp /var/lib/pgsql/pg_archive/%f %p" \
+#archive_cleanup_command="/usr/pgsql-9.5/bin/pg_archivecleanup /var/lib/pgsql/pg_archive %r" \
 primary_conninfo_opt="keepalives_idle=60 keepalives_interval=5 keepalives_count=5" \
+# Clusters master VIP
 master_ip="172.19.1.129" \
 restart_on_promote='true' \
 logfile="/var/lib/pgsql/tmp/dropme.log" \

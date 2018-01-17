@@ -1,5 +1,6 @@
 #!/bin/bash
-NODES="node1 node2"
+# list of nodes must be supplied as quoted, space separated list. ie "node1 node2".
+NODES=$1
 for i in $NODES; do ssh $i systemctl start pcsd.service; done
 for i in $NODES; do ssh $i pcs cluster destroy; done
 pcs cluster auth $NODES  -u hacluster -p manager
