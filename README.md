@@ -1,2 +1,2 @@
 # scripts
-various scripts
+My various scripts.
