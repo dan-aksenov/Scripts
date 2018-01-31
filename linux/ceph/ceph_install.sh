@@ -27,6 +27,8 @@ ceph-deploy osd create ceph01:sdc1 ceph02:sdc1 ceph03:sdc1
 ceph-deploy osd create ceph01:sdd1 ceph02:sdd1 ceph03:sdd1
 ceph-deploy osd create ceph01:sde1 ceph02:sde1 ceph03:sde1
 
+# Zabbix monitoring
+sudo yum install zabbix-sender
 sudo ceph mgr module enable zabbix
 sudo ceph config-key set mgr/zabbix/zabbix_host oemcc.fors.ru
 sudo ceph config-key set mgr/zabbix/identifier ceph02.fors.ru
