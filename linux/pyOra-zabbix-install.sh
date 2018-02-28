@@ -39,7 +39,7 @@ sudo cp Zabbix-PyOra-ActiveCheck-master/zabbix_agentd.d/oracle_pyora.conf /etc/z
 sudo mkdir /usr/lib/zabbix/cache
 sudo chown zabbix:zabbix /usr/lib/zabbix/cache
 
-# edit /etc/passwd zabbix home/hell
+# edit /etc/passwd zabbix home/shell
 
 #get oracle sid
 grep '^[a-z,A-Z].*:' /etc/oratab | cut -f1 -d":"
