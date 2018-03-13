@@ -5,7 +5,8 @@ NODES=$1
 
 #pcs property set stonith-enabled="false"
 pcs cluster cib pgsql_cfg
-pcs -f pgsql_cfg resource create  repmasterIP IPaddr2 ip=host_ip cidr_netmask=16 --group PGMGROUP
+# floating ip address 'SCAN'
+pcs -f pgsql_cfg resource create gpmasterIP IPaddr2 ip=SCAB_ip cidr_netmask=16 --group PGMGROUP
 
 pcs -f pgsql_cfg resource create pgsql pgsql \
 pgctl="/usr/pgsql-9.5/bin/pg_ctl" \
