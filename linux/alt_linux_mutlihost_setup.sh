@@ -27,7 +27,7 @@ for i in $hosts; do ssh $i sed -i 's/^ServerActive=127.0.0.1/ServerActive=pts-te
 for i in $hosts; do ssh $i sed -i 's/.localdomain//g' /etc/zabbix/zabbix_agentd.conf; done
 
 #postgres
-for i in $dbs; do scp /etc/apt/sources.list.d/pgpro.list $i:/etc/apt/sources.list.d/pgpro.list; done
+#for i in $dbs; do scp /etc/apt/sources.list.d/pgpro.list $i:/etc/apt/sources.list.d/pgpro.list; done
 for i in $dbs; do ssh $i apt-get update; done
 for i in $dbs; do ssh $i apt-get update; done
 
