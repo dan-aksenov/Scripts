@@ -9,7 +9,7 @@ for i in $hosts; do ssh $i apt-get update; done
 
 #update
 for i in $hosts; do ssh $i apt-get dist-upgrade -y; done
-for i in $hosts; do ssh $i update-kernel -y; done
+for i in $hosts; do ssh $i update-kernel; done
 for i in $hosts; do ssh $i init 6; done
 for i in $hosts; do ssh $i uname -r; done
 
