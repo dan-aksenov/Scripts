@@ -51,3 +51,8 @@ for i in $apps; do scp /root/distr/tomcat_users  $i:/u01/apache-tomcat-8.5.29/co
 for i in $apps; do scp /root/distr/tomcat.service  $i:/etc/systemd/system/tomcat.service; done
 for i in $apps; do scp /root/distr/manager_context  $i:/u01/apache-tomcat-8.5.29/webapps/manager/META-INF/context.xml; done
 for i in $apps; do ssh $i chown tomcat.tomcat /u01/apache-tomcat-8.5.29/webapps/manager/META-INF/context.xml; done
+
+#haproxy, keepalived
+for i in $haproxy; do ssh $i apt-get install keepalived -y; done
+for i in $haproxy; do ssh $i apt-get install haproxy -y; done
+
