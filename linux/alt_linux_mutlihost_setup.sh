@@ -57,6 +57,15 @@ for i in $dbs; do scp /etc/apt/sources.list.d/pgpro.list $i:/etc/apt/sources.lis
 for i in $dbs; do ssh $i apt-get update; done
 for i in $dbs; do ssh $i apt-get update; done
 
+#LVMs
+for i in $dbs; do ssh $i pvcreate /dev/sdb1; done
+for i in $dbs; do ssh $i vgcreate pgdata /dev/sdb1; done
+for i in $dbs; do ssh $i lvcreate -n pgdata -L299G pgdata; done
+for i in $dbs; do ssh $i mkfs.ext4 -L pgdata /dev/pgdata/pgdata; done
+for i in $dbs; do ssh $i mkdir /u01/pgdata; done
+for i in $dbs; do ssh $i 'echo "/dev/mapper/pgdata-pgdata /u01/pgdata ext4 defaults  1 2">>/etc/fstab'; done
+for i in $dbs; do ssh $i mount -a; done
+
 #Certified distro
 for i in $dbs; do ssh $i mkdir /root/PostgresPro_Cert ; done
 for i in $dbs; do scp /root/distr/PostgresProStdCert9.6.3.1.iso $i:/root/PostgresPro_Cert/PostgresProStdCert9.6.3.1.iso; done
@@ -75,3 +84,24 @@ for i in $dbs; do ssh $i cp /tmp/src/* /etc/apt/sources.list.d/; done
 for i in $dbs; do ssh $i apt-get update; done
 for i in $dbs; do ssh $i apt-get install postgrespro9.6-server -y; done
 for i in $dbs; do ssh $i apt-get install postgrespro9.6-contrib -y; done
+
+for i in $dbs; do ssh $i mv /var/lib/pgsql/9.6 /u01/pgdata/9.6; done
+for i in $dbs; do ssh $i ln -s /u01/pgdata/9.6 /var/lib/pgsql/9.6; done
+
+for i in $dbm; do scp /tmp/postgresql.conf $i:/u01/pgdata/9.6/data/postgresql.conf; done
+for i in $dbm; do scp /tmp/pg_hba.conf $i:/u01/pgdata/9.6/data/pg_hba.conf; done
+
+#mamonsu
+for i in $dbs; do ssh $i apt-get install python-module-pip -y; done
+for i in $dbs; do ssh $i pip install mamonsu; done
+for i in $dbs; do ssh $i mkdir /etc/mamonsu; done
+for i in $dbs; do ssh $i mkdir /var/log/mamonsu; done
+for i in $dbs; do scp /tmp/mamonsu  $i:/etc/init.d/mamonsu; done
+for i in $dbs; do ssh $i chmod 755 /etc/init.d/mamonsu; done
+for i in $dbs; do scp /tmp/agent.conf $i:/etc/mamonsu/agent.conf; done
+#correnct mamonsu client param
+for i in $dbs; do ssh $i sed -i "s/pts-test-db1c/$i/g" /etc/mamonsu/agent.conf; done
+for i in $dbs; do ssh $i useradd mamonsu; done
+for i in $dbs; do ssh $i service mamonsu start; done
+for i in $dbs; do ssh $i chkconfig mamonsu on; done
+
