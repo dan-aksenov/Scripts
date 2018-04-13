@@ -27,11 +27,6 @@ for i in $hosts; do ssh $i sed -i 's/^ServerActive=127.0.0.1/ServerActive=pts-te
 for i in $hosts; do ssh $i sed -i 's/.localdomain//g' /etc/zabbix/zabbix_agentd.conf; done
 for i in $hosts; do ssh $i service zabbix_agentd start; done
 
-#postgres
-#for i in $dbs; do scp /etc/apt/sources.list.d/pgpro.list $i:/etc/apt/sources.list.d/pgpro.list; done
-for i in $dbs; do ssh $i apt-get update; done
-for i in $dbs; do ssh $i apt-get update; done
-
 #tablespaces
 for i in $dbs; do ssh mkdir /var/lib/pgsql/9.6/pts/{fdc_pts_big_ind,fdc_pts_big_tab,fdc_pts_ind,fdc_pts_tab} -p; done
 for i in $dbs; do ssh $i mkdir /var/lib/pgsql/9.6/pts/{fdc_trans_ind,fdc_trans_tab} -p; done
@@ -56,3 +51,27 @@ for i in $apps; do ssh $i chown tomcat.tomcat /u01/apache-tomcat-8.5.29/webapps/
 for i in $haproxy; do ssh $i apt-get install keepalived -y; done
 for i in $haproxy; do ssh $i apt-get install haproxy -y; done
 
+#Databases
+#Non Certified distro
+for i in $dbs; do scp /etc/apt/sources.list.d/pgpro.list $i:/etc/apt/sources.list.d/pgpro.list; done
+for i in $dbs; do ssh $i apt-get update; done
+for i in $dbs; do ssh $i apt-get update; done
+
+#Certified distro
+for i in $dbs; do ssh $i mkdir /root/PostgresPro_Cert ; done
+for i in $dbs; do scp /root/distr/PostgresProStdCert9.6.3.1.iso $i:/root/PostgresPro_Cert/PostgresProStdCert9.6.3.1.iso; done
+for i in $dbs; do ssh $i mkdir /mnt/postgres; done
+for i in $dbs; do ssh $i mount /root/PostgresPro_Cert/PostgresProStdCert9.6.3.1.iso /mnt/postgres; done
+cat > /tmp/pgprocert.list <<EOF
+rpm file:/mnt/postgres/altlinux-spt/7/ x86_64 pgpro
+EOF
+for i in $dbs; do ssh $i mkdir /tmp/src; done
+for i in $dbs; do ssh $i mv /etc/apt/sources.list.d/* /tmp/src/; done
+for i in $dbs; do scp /tmp/pgprocert.list $i:/etc/apt/sources.list.d/pgprocert.list; done
+for i in $dbs; do ssh $i apt-get clean; done
+for i in $dbs; do ssh $i apt-get update; done
+for i in $dbs; do ssh $i apt-get install libpq5.8 libpq5.8-devel -y; done
+for i in $dbs; do ssh $i cp /tmp/src/* /etc/apt/sources.list.d/; done
+for i in $dbs; do ssh $i apt-get update; done
+for i in $dbs; do ssh $i apt-get install postgrespro9.6-server -y; done
+for i in $dbs; do ssh $i apt-get install postgrespro9.6-contrib -y; done
