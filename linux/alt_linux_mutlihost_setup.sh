@@ -28,7 +28,7 @@ for i in $hosts; do ssh $i sed -i 's/.localdomain//g' /etc/zabbix/zabbix_agentd.
 for i in $hosts; do ssh $i service zabbix_agentd start; done
 
 #tablespaces
-for i in $dbs; do ssh mkdir /var/lib/pgsql/9.6/pts/{fdc_pts_big_ind,fdc_pts_big_tab,fdc_pts_ind,fdc_pts_tab} -p; done
+for i in $dbs; do ssh $i mkdir /var/lib/pgsql/9.6/pts/{fdc_pts_big_ind,fdc_pts_big_tab,fdc_pts_ind,fdc_pts_tab} -p; done
 for i in $dbs; do ssh $i mkdir /var/lib/pgsql/9.6/pts/{fdc_trans_ind,fdc_trans_tab} -p; done
 for i in $dbs; do ssh $i chown postgres.postgres /var/lib/pgsql/9.6/pts -R; done
 
