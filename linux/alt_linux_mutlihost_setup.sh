@@ -46,6 +46,12 @@ for i in $apps; do scp /root/distr/tomcat_users  $i:/u01/apache-tomcat-8.5.29/co
 for i in $apps; do scp /root/distr/tomcat.service  $i:/etc/systemd/system/tomcat.service; done
 for i in $apps; do scp /root/distr/manager_context  $i:/u01/apache-tomcat-8.5.29/webapps/manager/META-INF/context.xml; done
 for i in $apps; do ssh $i chown tomcat.tomcat /u01/apache-tomcat-8.5.29/webapps/manager/META-INF/context.xml; done
+#wars
+for i in $portal; do scp distr/pts-portal-0.28.6.war $i:/opt/apache-tomcat-8.5.29/webapps/portal.war; done
+for i in $portal; do scp distr/pts-public-0.28.6.war $i:/opt/apache-tomcat-8.5.29/webapps/mobile.war; done
+for i in $integr; do scp distr/pts-integration-0.28.6.war $i:/opt/apache-tomcat-8.5.29/webapps/integration.war; done
+for i in $joint; do scp distr/pts-jointstorage-0.28.6.war $i:/opt/apache-tomcat-8.5.29/webapps/jointstorage.war; done
+for i in $arm; do scp distr/pts-restricted-0.28.6.war $i:/opt/apache-tomcat-8.5.29/webapps/pts.war; done
 
 #haproxy, keepalived
 for i in $haproxy; do ssh $i apt-get install keepalived -y; done
@@ -105,3 +111,15 @@ for i in $dbs; do ssh $i useradd mamonsu; done
 for i in $dbs; do ssh $i service mamonsu start; done
 for i in $dbs; do ssh $i chkconfig mamonsu on; done
 
+#pgbouncer
+for i in $dbs; do ssh $i apt-get install pgbouncer; done
+for i in $dbs; do scp ./tmp/pgbouncer.service $i:/etc/systemd/system/pgbouncer.service; done
+for i in $dbs; do ssh $i mkdir /var/log/pgbouncer; done
+for i in $dbs; do ssh $i chown pgbouncer.pgbouncer /var/log/pgbouncer; done
+for i in $dbs; do ssh $i systemctl daemon-reload; done
+for i in $dbs; do ssh $i systemctl start pgbouncer; done
+for i in $dbs; do ssh $i systemctl enable pgbouncer; done
+
+#crontab
+for i in $hosts; do ssh $i systemctl start crond; done
+for i in $hosts; do ssh $i systemctl enable crond; done
