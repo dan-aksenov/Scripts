@@ -52,6 +52,7 @@ for i in $portal; do scp distr/pts-public-0.28.6.war $i:/opt/apache-tomcat-8.5.2
 for i in $integr; do scp distr/pts-integration-0.28.6.war $i:/opt/apache-tomcat-8.5.29/webapps/integration.war; done
 for i in $joint; do scp distr/pts-jointstorage-0.28.6.war $i:/opt/apache-tomcat-8.5.29/webapps/jointstorage.war; done
 for i in $arm; do scp distr/pts-restricted-0.28.6.war $i:/opt/apache-tomcat-8.5.29/webapps/pts.war; done
+for i in $smev; do scp distr/Smev*.war $i:/opt/apache-tomcat-8.5.29/webapps/; done
 
 #haproxy, keepalived
 for i in $haproxy; do ssh $i apt-get install keepalived -y; done
