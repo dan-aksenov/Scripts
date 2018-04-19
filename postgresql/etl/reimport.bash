@@ -1,5 +1,6 @@
 # Script for partial reimport of PG's databases during upgrade.
 # In normal circumstances pg_upgrade should be used.
+# GNUParallel is required
 dbs='database1 database2'
 function reimp {
     psql -p 5433 -c "drop database $1"
