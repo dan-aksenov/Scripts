@@ -28,10 +28,10 @@ $pg_host:5432:postgres:streaming_barman:barman
 EOF
 
 # Add pg_hba on target
-# get IP
+# get barman's IP
 ip=$(ip a | grep global | cut -f6 -d" ")
-ssh postgres@$pg_host 'echo "host all barman $ip md5" >> /var/lib/pg*/*/data/pg_hba.conf'
-ssh postgres@$pg_host 'echo "host replication streaming_barman $ip trust" >> /var/lib/pg*/*/data/pg_hba.conf'
+ssh postgres@$pg_host "echo host all barman $ip md5 >> /var/lib/pg*/*/data/pg_hba.conf"
+ssh postgres@$pg_host "echo host replication streaming_barman $ip trust >> /var/lib/pg*/*/data/pg_hba.conf"
 
 # Check if barman can actually connect to target database.
 psql -c 'SELECT version()' -U barman -h $pg_host postgres
