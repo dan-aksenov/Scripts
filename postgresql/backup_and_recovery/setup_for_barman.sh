@@ -1,4 +1,4 @@
-# This script should be runned from backup server.
+# This script should be run from backup server.
 # pg_host - is the PostgreiSQL server being added to barman's infrastructure.
 pg_host=$1
 
