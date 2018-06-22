@@ -9,7 +9,7 @@ rem set source
 set src="E:\Users\danila\Pictures\Мои фотографии"
 
 rem set YandexDisk destination
-set dst="F:\Users\danila\YandexDisk\!BUPS\fotos\Мои фотографии"
+set dst="E:\Users\danila\YandexDisk\!BUPS\fotos\Мои фотографии"
 set log=/unilog:"%log_dir%\photo_to_Ya.log"
 
 robocopy %src% %dst% *.* %log% /tee /z /mir /mt
