@@ -5,7 +5,7 @@ pg_ver=11
 # Streaming master
 master=cos7-sb1
 # Streaming slaves.
-slave=cos7-sb2
+slaves=cos7-sb2
 
 ansible-playbook -i ../ansible-hosts/test -l $master postgres_main.yml
 ansible-playbook -i ../ansible-hosts/test -l $slaves postgres_main.yml --tags slave
