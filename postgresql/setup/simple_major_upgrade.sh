@@ -17,6 +17,7 @@ ansible -i ../ansible-hosts/test $master -a "$cmd" --become --become-user=postgr
 
 ansible -i ../ansible-hosts/test $slave -a "/usr/pgsql-$pg_ver_old/bin/pg_ctl stop -D /var/lib/pgsql/$pg_ver_old/data" --become --become-user=postgres -u ansible 
 
+#copy recovery.conf, what about 12?
 cmd="cd /var/lib/pgsql && rsync --relative --archive --hard-links --size-only $pg_ver_old/data $pg_ver_new/data root@$slave:/var/lib/pgsql/"
 ssh ansible@$master $cmd
 
