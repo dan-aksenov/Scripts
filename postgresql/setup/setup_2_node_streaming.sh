@@ -7,10 +7,10 @@ pg_ver=$1
 # Streaming master
 master=$2
 # Streaming slaves.
-slaves=$3
+slave=$3
 
-ansible-playbook -i ../ansible-hosts/test -l $master postgres_main.yml
-ansible-playbook -i ../ansible-hosts/test -l $slaves postgres_main.yml --tags slave
+ansible-playbook -i ../ansible-hosts/test -l $master postgres_main.yml -e "postgresql_version=$pg_ver"
+ansible-playbook -i ../ansible-hosts/test -l $slave postgres_main.yml --tags slave -e "postgresql_version=$pg_ver"
 ssh ansible@$master sudo sed -i 's/^#node_id=1/node_id=1/g' /etc/repmgr/$pg_ver/repmgr.conf
 ssh ansible@$slave sudo sed -i 's/^#node_id=1/node_id=2/g' /etc/repmgr/$pg_ver/repmgr.conf
 ssh ansible@$master sudo -iu postgres /usr/pgsql-$pg_ver/bin/repmgr primary register
