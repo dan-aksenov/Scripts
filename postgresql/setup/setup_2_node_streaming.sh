@@ -1,11 +1,13 @@
 # Should use My ansible roles to install postgreses.
+# Exit if any command fails
+set -e
 
 # Postgresql version
-pg_ver=11
+pg_ver=$1
 # Streaming master
-master=cos7-sb1
+master=$2
 # Streaming slaves.
-slaves=cos7-sb2
+slaves=$3
 
 ansible-playbook -i ../ansible-hosts/test -l $master postgres_main.yml
 ansible-playbook -i ../ansible-hosts/test -l $slaves postgres_main.yml --tags slave
