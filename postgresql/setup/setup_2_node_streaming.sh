@@ -22,9 +22,9 @@ echo Register Master
 ssh ansible@$master sudo -iu postgres /usr/pgsql-$pg_ver/bin/repmgr primary register
 echo Clone Slave
 ssh ansible@$slave sudo -iu postgres /usr/pgsql-$pg_ver/bin/repmgr -h $master -U repmgr -d repmgr standby clone
-echo Register Slave
-ssh ansible@$slave sudo -iu postgres /usr/pgsql-$pg_ver/bin/repmgr standby register
 echo Start Slave
 ssh ansible@$slave sudo -iu postgres /usr/pgsql-$pg_ver/bin/pg_ctl start -D /var/lib/pgsql/$pg_ver/data
+echo Register Slave
+ssh ansible@$slave sudo -iu postgres /usr/pgsql-$pg_ver/bin/repmgr standby register
 
 ssh ansible@$slave sudo -iu postgres /usr/pgsql-$pg_ver/bin/repmgr cluster show
