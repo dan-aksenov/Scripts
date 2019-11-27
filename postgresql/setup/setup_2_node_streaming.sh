@@ -1,6 +1,5 @@
 # Should use My ansible roles to install postgreses.
 # Exit if any command fails
-set -e
 
 # Postgresql version
 pg_ver=$1
