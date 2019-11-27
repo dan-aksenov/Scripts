@@ -14,5 +14,5 @@ ssh ansible@$master sudo -u postgres cp /var/lib/pgsql/$pg_ver_old/data/pg_hba.c
 cmd="/usr/pgsql-$pg_ver_new/bin/pg_upgrade -d /var/lib/pgsql/$pg_ver_old/data -D /var/lib/pgsql/$pg_ver_new/data -b /usr/pgsql-$pg_ver_old/bin/ -B /usr/pgsql-$pg_ver_new/bin/ -k"
 ansible -i ../ansible-hosts/test $master -a "$cmd" --become --become-user=postgres -u ansible 
 
-ansible -i ../ansible-hosts/test $master -a "/usr/pgsql-$pg_ver_new/bin/pg_ctl start -D /var/lib/pgsql/$pg_ver_new/data" --become --become-user=postgres -u ansible 
-#ssh ansible@$master sudo -u postgres /usr/pgsql-$pg_ver_new/bin/pg_ctl start -W -D /var/lib/pgsql/$pg_ver_new/data
+ansible-playbook -i ../ansible-hosts/test -l $master postgres_main.yml --tags 6_startdb -e "postgresql_version=$pg_ver_new"
+#ansible -i ../ansible-hosts/test $master -a "/usr/pgsql-$pg_ver_new/bin/pg_ctl start -D /var/lib/pgsql/$pg_ver_new/data" --become --become-user=postgres -u ansible 
