@@ -28,8 +28,12 @@ ansible -i $inventory $slave -a "/usr/pgsql-$pg_ver_old/bin/pg_ctl stop -D /var/
 #copy recovery.conf, what about 12?
 cmd="cd /var/lib/pgsql && rsync --relative --archive --hard-links --size-only $pg_ver_old/data $pg_ver_new/data root@$slave:/var/lib/pgsql/"
 ssh ansible@$master $cmd
+#This is temporary solution. Also mind pg-12 recovery.conf changes.
+ssh ansible@$slave sudo -u postgres cp /var/lib/pgsql/$pg_ver_old/data/recovery.conf /var/lib/pgsql/$pg_ver_new/data/recovery.conf
 
 ansible-playbook -i $inventory -l $slave postgres_main.yml --tags 6_startdb -e "postgresql_version=$pg_ver_new"
 
 ansible-playbook -i $inventory -l $master postgres_main.yml --tags 6_startdb -e "postgresql_version=$pg_ver_new"
 #ansible -i $inventory $master -a "/usr/pgsql-$pg_ver_new/bin/pg_ctl start -D /var/lib/pgsql/$pg_ver_new/data" --become --become-user=postgres -u ansible 
+
+ssh ansible@$slave sudo -iu postgres /usr/pgsql-$pg_ver_new/bin/repmgr cluster show
