@@ -1,4 +1,10 @@
 # Postgresql version
+
+if [ "$#" -ne 1 ]; then
+    echo "ERROR. Need Parameters: 1 Postgres version old, Postgres version new, 3 Master's name, 4 Slave's name" 
+    exit 1
+fi
+
 pg_ver_old=$1
 pg_ver_new=$2
 master=cos7-sb1

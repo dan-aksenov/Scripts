@@ -1,5 +1,10 @@
 # Should use My ansible roles to install postgreses.
 
+if [ "$#" -ne 1 ]; then
+    echo "ERROR. Need Parameters: 1 Postgres version, 2 Master's name, 3 Slave's name" 
+    exit 1
+fi
+
 # Postgresql version
 pg_ver=$1
 # Streaming master
