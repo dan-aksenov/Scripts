@@ -2,7 +2,7 @@
 # User with passwordless ssh to targeted hosts is required
 
 if [ "$#" -ne 4 ]; then
-    echo "ERROR! Need Parameters: 1 - Postgres version, 2 - Master's name, 3 - Slave's name, 4 - Ansible inventory file, 5 - Ansible user" 
+    echo "ERROR! Need Parameters: 1 - Postgres version, 2 - Master's name, 3 - Slave's name, 4 - Ansible inventory file" 
     exit 1
 fi
 
@@ -15,7 +15,7 @@ slave=$3
 # Ansible Inventory file
 inventory=$4
 # Ansible user with root access
-ansible_user=$5
+ansible_user=$USER
 
 echo Install Master
 ansible-playbook -i $inventory -l $master postgres_main.yml -e "postgresql_version=$pg_ver"
