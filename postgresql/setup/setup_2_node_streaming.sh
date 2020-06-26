@@ -34,7 +34,7 @@ echo Clone Slave
 ssh $ansible_user@$slave sudo -iu postgres /usr/pgsql-$pg_ver/bin/repmgr -h $master -U repmgr -d repmgr standby clone
 read -p "Press [Enter] key to proceed..."
 echo Start Slave
-ansible -i $inventory $slave -a "/usr/pgsql-$pg_ver/bin/pg_ctl start -D /var/lib/pgsql/$pg_ver/data" --become --become-user=postgres -u ansible 
+ansible -i $inventory $slave -a "/usr/pgsql-$pg_ver/bin/pg_ctl start -D /var/lib/pgsql/$pg_ver/data" --become --become-user=postgres -u $ansible_user
 read -p "Press [Enter] key to proceed..."
 echo Register Slave
 ssh $ansible_user@$slave sudo -iu postgres /usr/pgsql-$pg_ver/bin/repmgr standby register
