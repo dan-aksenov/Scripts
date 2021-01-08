@@ -1,4 +1,3 @@
-rem REDO THIS IN PS. like DOCS.
 chcp 1251
 
 rem logging directory
