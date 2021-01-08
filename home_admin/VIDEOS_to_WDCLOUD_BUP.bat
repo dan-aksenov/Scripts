@@ -2,7 +2,7 @@ rem REDO THIS IN PS. like DOCS.
 chcp 1251
 
 set log="e:\TMP"
-set src="e:\Users\danila\Videos"
+set src="F:\Users\danila\Videos"
 
 IF NOT EXIST %log% MD %log%
 

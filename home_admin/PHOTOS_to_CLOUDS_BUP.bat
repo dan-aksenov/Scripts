@@ -6,7 +6,7 @@ set log_dir=E:\TMP
 IF NOT EXIST %log_dir% MD %log_dir%
 
 rem set source
-set src="E:\Users\danila\Pictures\Мои фотографии"
+set src="F:\Users\danila\Pictures\Мои фотографии"
 
 rem set YandexDisk destination
 set dst="E:\Users\danila\YandexDisk\!BUPS\fotos\Мои фотографии"
