@@ -11,12 +11,12 @@ rem set YandexDisk destination
 set dst="E:\Users\danila\YandexDisk\!BUPS\fotos\Мои фотографии"
 set log=/unilog:"%log_dir%\photo_to_Ya.log"
 
-robocopy %src% %dst% *.* %log% /tee /z /mir /mt
+robocopy %src% %dst% *.* %log% /tee /z /mir
 pause
 
 rem set Wdmycloud destination
 set dst="\\Wdmycloud\danila\!BUPS\fotos\Мои фотографии"
 set log=/unilog:"%log_dir%\photo_to_mycloud.log"
-robocopy %src% %dst% *.* %log% /tee /z /mir /mt
+robocopy %src% %dst% *.* %log% /tee /z /mir
  
 pause
