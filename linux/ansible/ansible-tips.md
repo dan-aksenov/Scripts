@@ -14,6 +14,4 @@ This can be a huge timesaver when developing your Ansible code
 5) The Ansible Debugger
 Ansible also contains a debugger that you can use to interrogate a running Ansible process.
 
-
-
 <https://zwischenzugs.com/2021/08/27/five-ansible-techniques-i-wish-id-known-earlier/>
