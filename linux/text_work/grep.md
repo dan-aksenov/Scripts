@@ -1,5 +1,27 @@
 # Grep
 
+Вывод строк до совпадения:
+`grep -B 3 foo README.txt`
+
+Вывод строк после совпадения:
+`grep -A 2 foo README.txt`
+
+Вывод строк вокруг совпадения:
+`grep -C 2 foo README.txt`
+
+Рекурсивный grep:
+`grep -r "texthere"`
+
+Только файлы где совпадения:
+`grep -lr text /path/`
+
+Множественный grep:
+`grep -E 'foo|bar' *.txt`
+`grep -e foo -e bar *.txt`
+
+Рекурсивный grep по определенным файлам:
+`grep -r --include foo.bar baz */path/`
+
 ## Replace in multiple files
 
 `grep -rl 'windows' ./ | xargs sed -i 's/windows/linux/g'`
